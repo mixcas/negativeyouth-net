@@ -1,0 +1,17 @@
+# Raw Wayback bytes. Content-addressed and resumable: re-running any phase
+# reuses whatever is already here, so this is a cache, not source of truth.
+# Regenerate with tools/04_fetch.py. ~240 MB.
+_cache/
+
+# Build output. Fully reproducible from tools/ + _work/ + _cache/.
+site/
+
+# Pristine copies of captured pages that generated output replaces.
+_provenance/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# OS noise
+.DS_Store
