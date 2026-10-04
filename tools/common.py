@@ -35,6 +35,17 @@ WEB = "https://web.archive.org/web"
 
 ORIGIN_HOST = "negativeyouth.net"
 
+# The site also served content from two subdomains: cas. and maligna.
+# Both are this blog's own content and must be mirrored with it, otherwise
+# assets referenced only from those hosts 404.
+SUBDOMAINS = (ORIGIN_HOST, f"cas.{ORIGIN_HOST}", f"maligna.{ORIGIN_HOST}")
+
+
+def is_own_host(host):
+    """True for any host this site served content from."""
+    h = (host or "").lower().replace(":80", "")
+    return h in SUBDOMAINS
+
 UA = (
     "Mozilla/5.0 (compatible; negativeyouth.net archival restoration; "
     "+local research mirror)"
@@ -78,13 +89,12 @@ def canonical(url):
 
 
 def same_origin(url):
-    """True if this URL points at the original site."""
+    """True if this URL points at the original site or one of its subdomains."""
     m = re.match(r"^(?:https?:)?//([^/]+)", url.strip(), re.I)
     if not m:
         # bare relative path
         return url.startswith("/") and not url.startswith("//")
-    host = m.group(1).lower().replace(":80", "")
-    return host == ORIGIN_HOST
+    return is_own_host(m.group(1))
 
 
 def host_of(url):
@@ -101,8 +111,11 @@ def dedupe_key(url):
     """
     The identity used to collapse captures of the same thing.
 
-    Scheme and host are dropped: every link gets rewritten to a root-relative
-    path anyway, so http vs https is not a real difference.
+    Scheme is dropped: every link gets rewritten to a root-relative path
+    anyway, so http vs https is not a real difference. Subdomain is NOT
+    dropped - `cas.negativeyouth.net/tb/style.css` and
+    `negativeyouth.net/wp-content/...` are different files on different hosts,
+    and collapsing them would lose one.
 
     Percent-escapes are upper-cased. The same resource reaches us spelled with
     different escape case - `%D0%BC` and `%d0%bc` are the same bytes - and
@@ -112,9 +125,11 @@ def dedupe_key(url):
     `style.css?ver=3.4` are genuinely distinct captures worth keeping.
     """
     p = to_origin_path(canonical(url))
+    host = host_of(url).lower().replace(":80", "")
+    prefix = f"/_host/{host}" if host and host != ORIGIN_HOST else ""
     if _ASSET_EXT.search(p.split("?")[0]):
-        return _upper_escapes(p)
-    return _upper_escapes(p.split("?")[0]) or "/"
+        return prefix + _upper_escapes(p)
+    return (prefix + _upper_escapes(p.split("?")[0])) or (prefix or "/")
 
 
 def _upper_escapes(path):
@@ -153,7 +168,7 @@ def slugify(path):
 
 def to_origin_path(url):
     """
-    Map any same-origin URL (absolute or protocol-relative) to a bare path.
+    Map any own-origin URL (absolute or protocol-relative) to a bare path.
 
     Used for link rewriting and for set membership tests.
     """
@@ -163,6 +178,14 @@ def to_origin_path(url):
         return "/"
     u = re.sub(r"^:80(?=/)", "", u)
     return u
+
+
+def path_to_origin(key):
+    """Inverse of dedupe_key: recover the fetchable absolute URL for a key."""
+    if key.startswith("/_host/"):
+        host, _, rest = key[len("/_host/"):].partition("/")
+        return f"http://{host}/{rest}"
+    return f"http://{ORIGIN_HOST}{key}"
 
 
 # --------------------------------------------------------------------------
@@ -187,6 +210,12 @@ def classify(url, mime):
     p = to_origin_path(canonical(url))
 
     if p.startswith("/.well-known/") or p in ("/security.txt", "/.htaccess"):
+        return "exclude"
+
+    # robots.txt is per-host boilerplate served by the hosting account, not
+    # blog content. Excluding it also stops a subdomain's robots.txt from being
+    # mistaken for a page of this site.
+    if p.rstrip("/").split("?")[0].endswith("/robots.txt"):
         return "exclude"
 
     if mime and mime.startswith("image/"):
@@ -330,7 +359,7 @@ class _Throttle:
             self.next_ok = now + self.delay
 
 
-_THROTTLE = _Throttle(2.5)
+_THROTTLE = _Throttle(1.5)
 
 # The archive intermittently returns 503 and refuses connections outright under
 # load. That is a throttle, not a ban, and the cure is to back off for minutes

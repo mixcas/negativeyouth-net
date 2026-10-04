@@ -157,7 +157,7 @@ def fetch(path, ts=None, timeout=90):
         return data.decode("utf-8", "replace"), meta
 
     stamp = f"{ts}id_" if ts else "2015id_"
-    url = f"{C.WEB}/{stamp}/http://{C.ORIGIN_HOST}{path}"
+    url = f"{C.WEB}/{stamp}/{C.path_to_origin(path)}"
     raw = C.http_get(url, tries=3, delay=3.0, timeout=timeout, raw=True)
     if raw is None:
         return None, None
@@ -327,7 +327,7 @@ def main():
     # IDs that only ever redirected, so the index is right to omit them.
     recovered, aliases = [], []
     for p in missing:
-        rows = C.cdx_rows(match="exact", url=f"{C.ORIGIN_HOST}{p}",
+        rows = C.cdx_rows(match="exact", url=C.path_to_origin(p),
                           fl="timestamp,statuscode", limit=50)
         if not rows:
             continue  # genuinely no capture at all

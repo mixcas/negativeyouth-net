@@ -44,7 +44,7 @@ def fetch(path, ts=None):
     if data is not None:
         return data
     stamp = f"{ts}id_" if ts else "2015id_"
-    raw = C.http_get(f"{C.WEB}/{stamp}/http://{C.ORIGIN_HOST}{path}",
+    raw = C.http_get(f"{C.WEB}/{stamp}/{C.path_to_origin(path)}",
                      tries=3, delay=3.0, raw=True)
     if raw is None:
         return None
@@ -99,14 +99,31 @@ def main():
     # unretrievable: the index and the WARC payload are separate stores, and a
     # handful of records here are indexed but not replayable. Those get one
     # extra pass over every capture they have before being called unreachable.
-    retry_paths = [r["path"] for r in csv.DictReader(
-        open(os.path.join(C.WORK, "manifest.csv"), encoding="utf-8"))
-        if r["kind"] == "feed" and not C.cache_get(r["path"])[0]]
+    # Phase 4's log tells us which feeds already had their retry pass, so a
+    # re-run here does not redo 851 CDX lookups that all failed.
+    _WORK_FEEDLOG = {}
+    log_path = os.path.join(C.WORK, "fetch-log.csv")
+    if os.path.exists(log_path):
+        for r in csv.DictReader(open(log_path, encoding="utf-8")):
+            _WORK_FEEDLOG[r["path"]] = r
+
+    retry_paths = []
+    for r in csv.DictReader(open(os.path.join(C.WORK, "manifest.csv"),
+                                 encoding="utf-8")):
+        if r["kind"] != "feed":
+            continue
+        # Only worth a second pass if the primary fetch already tried it.
+        if C.cache_get(r["path"])[0]:
+            continue
+        prior = _WORK_FEEDLOG.get(r["path"])
+        if prior and prior.get("outcome") != "failed":
+            continue
+        retry_paths.append(r["path"])
     print(f"  retrying {len(retry_paths)} unretrievable feeds across all captures...")
     still_dead = []
     for path in retry_paths:
         got = False
-        for ts in C.cdx_rows(match="exact", url=f"{C.ORIGIN_HOST}{path}",
+        for ts in C.cdx_rows(match="exact", url=C.path_to_origin(path),
                              fl="timestamp,statuscode", limit=50):
             if ts.get("statuscode") != "200":
                 continue

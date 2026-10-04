@@ -11,6 +11,9 @@ resource,reason,captures
 /1551/,no_200,3
 /2013,no_200,1
 /VmePZ/robots.txt,no_200,2
+/_host/www.negativeyouth.net/,no_200,10
+/_host/www.negativeyouth.net/favicon.ico,no_200,1
+/_host/www.negativeyouth.net/wp-content/themes/sandbox/images/separacion7.png,parked_era_only,1
 /actually,no_200,1
 /ads.txt,parked_era_only,2
 /apache-warrior,no_200,3

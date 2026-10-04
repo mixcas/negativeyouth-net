@@ -77,10 +77,10 @@ _11 posts carry no recoverable date._
 | ella | 5 |
 | tomas-diaz | 4 |
 | gaby-cepeda | 3 |
-| gregor | 1 |
 | eduardo-caudillo | 1 |
 | maida | 1 |
 | daniela-quant | 1 |
+| gregor | 1 |
 
 ## Categories
 
@@ -90,8 +90,8 @@ _11 posts carry no recoverable date._
 | video | 308 |
 | uncategorized | 141 |
 | eventos | 28 |
-| mixtapes | 22 |
 | entrevistas | 22 |
+| mixtapes | 22 |
 | arte-2 | 11 |
 | moda | 10 |
 | articulos | 8 |
@@ -123,5 +123,5 @@ regenerated in Phase 8. Full list in `_work/pagination.csv`.
 
 ## Fetch state
 
-- Cache: **1048 files**, 146.4 MB
+- Cache: **1000 files**, 144.6 MB
 - HTTP requests this phase: 1000 (all cached for Phase 4 reuse)
