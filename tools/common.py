@@ -75,6 +75,11 @@ def canonical(url):
     when generating redirect rules for old inbound links.
     """
     url = url.strip()
+    # Some posts contain a doubled scheme, e.g. `http://http://host/path`.
+    # The extra scheme parses as a hostname, which makes the URL look
+    # third-party and silently exempts it from rewriting, so it is repaired
+    # before anything else inspects it.
+    url = re.sub(r"^(https?):\s*//\s*(?:https?://)+", r"\1://", url, flags=re.I)
     m = re.match(r"^(https?)://([^/]*)(/.*)?$", url, re.I)
     if not m:
         return url
@@ -90,10 +95,11 @@ def canonical(url):
 
 def same_origin(url):
     """True if this URL points at the original site or one of its subdomains."""
-    m = re.match(r"^(?:https?:)?//([^/]+)", url.strip(), re.I)
+    u = re.sub(r"^(https?):\s*//\s*(?:https?://)+", r"\1://", url.strip(), flags=re.I)
+    m = re.match(r"^(?:https?:)?//([^/]+)", u, re.I)
     if not m:
         # bare relative path
-        return url.startswith("/") and not url.startswith("//")
+        return u.startswith("/") and not u.startswith("//")
     return is_own_host(m.group(1))
 
 
@@ -226,6 +232,10 @@ def classify(url, mime):
         return "js"
     if mime and ("font" in mime or p.endswith((".woff", ".woff2", ".ttf", ".eot", ".otf"))):
         return "font"
+    if p.rstrip("/").split("?")[0].endswith(".php"):
+        # WordPress endpoints. xmlrpc.php happens to be served as text/xml,
+        # which would otherwise classify it as a feed.
+        return "exclude"
     if mime == "text/xml" or p.rstrip("/").endswith("/feed"):
         return "feed"
 

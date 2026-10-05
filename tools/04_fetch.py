@@ -41,9 +41,11 @@ def fetch_one(path, ts, mime):
 
     When the manifest's chosen timestamp does not replay, the CDX index is
     consulted for that exact URL and every capture it lists is tried. This
-    matters: the manifest deliberately picks the *largest* payload per resource
-    for completeness, and that capture is not always the one that replays. For
-    assets all captures of one URL are the same file, so any of them will do.
+    matters twice over: the manifest deliberately picks the *largest* payload
+    per resource for completeness, and that capture is not always the one that
+    replays; and a CDX lookup issued while the archive is throttling returns
+    nothing at all, so a resource can be marked failed purely because its
+    lookup was unlucky rather than because the capture is missing.
     """
     data, meta = C.cache_get(path)
     if data is not None:
@@ -52,13 +54,19 @@ def fetch_one(path, ts, mime):
     stamps = []
     if ts:
         stamps.append(f"{ts}id_")
-    # Fall back to every capture the index knows about, newest first.
-    for r in C.cdx_rows(match="exact", url=C.path_to_origin(path),
-                        fl="timestamp,statuscode", limit=50):
-        if r.get("statuscode") == "200":
-            stamp = f"{r['timestamp']}id_"
-            if stamp not in stamps:
-                stamps.append(stamp)
+
+    # A throttled CDX returns an empty result, which is indistinguishable from
+    # "never captured" unless the lookup is tried more than once.
+    for _attempt in range(3):
+        for r in C.cdx_rows(match="exact", url=C.path_to_origin(path),
+                            fl="timestamp,statuscode", limit=50):
+            if r.get("statuscode") == "200":
+                stamp = f"{r['timestamp']}id_"
+                if stamp not in stamps:
+                    stamps.append(stamp)
+        if len(stamps) > 1 or not ts:
+            break
+        time.sleep(5)
 
     for stamp in stamps:
         url = f"{C.WEB}/{stamp}/{C.path_to_origin(path)}"

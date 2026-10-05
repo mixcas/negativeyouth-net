@@ -47,20 +47,39 @@ ASSET_KINDS = {"image", "css", "js", "font", "other_asset"}
 # and it keeps the mirror legible next to the original site.
 SKIP_PREFIXES = ("/_host/",)
 
+PATH_EXT = re.compile(r"\.[a-z0-9]{2,5}$", re.I)
+
+
+def path_ext(p):
+    """The file extension of a path, or '' if it looks like a page."""
+    m = PATH_EXT.search(p.split("?")[0].rstrip("/"))
+    return m.group(0).lower() if m else ""
+
 
 def local_path(key, kind):
-    """Where an archived resource lives in the output tree."""
+    """
+    Where an archived resource lives in the output tree.
+
+    Query strings are preserved in the dedupe key because `style.css?ver=3.8.5`
+    and `style.css?ver=3.4` are genuinely different captures, but they cannot
+    survive as filenames: a `?` in a path is a query-string delimiter on the
+    web, so a file literally named `jquery.js?ver=1.8.3` is unservable. The
+    version is folded into the name instead.
+    """
+    base, _, query = key.partition("?")
+    suffix = "-" + C.slugify("q" + query) if query else ""
+
     if kind == "feed":
-        owner = key.rsplit("/feed/", 1)[0] + "/" if key.endswith("/feed/") else key
+        owner = base.rsplit("/feed/", 1)[0] + "/" if base.endswith("/feed/") else base
         return f"/feeds/{C.slugify(owner)}/feed.xml"
     if kind in PAGE_KINDS:
-        if key == "/":
+        if base == "/":
             return "/index.html"
-        return f"/{C.slugify(key)}/index.html"
+        return f"/{C.slugify(base)}{suffix}/index.html"
     # assets
-    if key.startswith(SKIP_PREFIXES):
-        return key
-    return key
+    if base.startswith(SKIP_PREFIXES):
+        return base + suffix
+    return base + suffix
 
 
 def build_map(manifest):
@@ -102,12 +121,34 @@ def unicodedata_key(path):
 # rewriting
 # --------------------------------------------------------------------------
 
-ATTR_RE = re.compile(r'''(?P<attr>\b(?:href|src|data-src|data-href|action|poster)\s*=\s*)(?P<q>["'])(?P<url>[^"']*)(?P=q)''', re.I)
+ATTR_RE = re.compile(
+    r'''(?P<attr>\b(?:href|src|data-src|data-href|action|poster)\s*=\s*)'''
+    r'''(?P<q>["'])(?P<url>[^"']*)(?P=q)''', re.I)
+# A few posts were written with an unquoted href, e.g.
+# `<a href=http://negativeyouth.net/tag/shades>`. The quoted form cannot match
+# those, so an unquoted variant is needed to catch them without touching prose.
+UNQUOTED_ATTR_RE = re.compile(
+    r'''(?P<attr>\b(?:href|src|action|poster)\s*=\s*)'''
+    r'''(?P<url>(?:https?:)?//(?:www\.)?negativeyouth\.net[^"'\s<>]*)''', re.I)
+TITLE_ATTR_RE = re.compile(
+    r'''(?P<attr>\btitle\s*=\s*)(?P<q>["'])(?P<url>(?:https?:)?//'''
+    r'''(?:www\.)?negativeyouth\.net[^"']*)(?P=q)''', re.I)
 SRCSET_RE = re.compile(r'''(?P<attr>\bsrcset\s*=\s*)(?P<q>["'])(?P<val>[^"']*)(?P=q)''', re.I)
 CSSURL_RE = re.compile(r'''url\(\s*(?P<q>["']?)(?P<url>[^)"']+)(?P=q)\s*\)''', re.I)
 STYLE_ATTR_RE = re.compile(r'''(?P<attr>\bstyle\s*=\s*)(?P<q>["'])(?P<val>[^"']*)(?P=q)''', re.I)
 META_URL_RE = re.compile(
     r'''(?P<attr>\bcontent\s*=\s*)(?P<q>["'])(?P<val>(?:https?:)?//[^"']*negativeyouth\.net[^"']*)(?P=q)''', re.I)
+# A URL embedded as a query parameter of a third-party embed. Facebook's like
+# plugin names the page it is liking inside its own href, and that value must
+# point at the local mirror too, or the plugin fetches the parked domain.
+EMBED_PARAM_RE = re.compile(
+    r'''(?P<pre>(?:href|srcdoc)=)(?P<q>["'])(?P<val>[^"']*negativeyouth\.net[^"']*)(?P=q)''', re.I)
+# Share widgets carry the page being shared in data-* attributes of their own,
+# e.g. Twitter's data-url. The attribute name is not in ATTR_RE, so these would
+# otherwise keep pointing visitors at the parked domain.
+DATA_ATTR_RE = re.compile(
+    r'''(?P<attr>\bdata-[a-z-]*(?:url|href|link|share|image)[a-z-]*\s*=\s*)'''
+    r'''(?P<q>["'])(?P<url>[^"']*negativeyouth\.net[^"']*)(?P=q)''', re.I)
 
 
 class Rewriter:
@@ -116,6 +157,14 @@ class Rewriter:
         self.referenced = set()      # local paths the document depends on
         self.unresolved = set()      # referenced but never recovered
         self.external = set()
+        # Bare asset path -> one captured "?ver=" variant of it. WordPress
+        # serves a single file under many URLs, so a page may reference
+        # `style.css` bare while only `style.css?ver=3.8.5` was ever crawled.
+        self.versioned = {}
+        for key in sorted(mapping):
+            base, q, _ = key.partition("?")
+            if q and path_ext(base):
+                self.versioned.setdefault(base, key)
 
     def target(self, url):
         """
@@ -140,14 +189,22 @@ class Rewriter:
             u, frag = u.split("#", 1)
         abs_url = urllib.parse.urljoin(f"http://{C.ORIGIN_HOST}/", u)
         key = C.dedupe_key(abs_url)
-
         info = self.mapping.get(key)
         if info:
             local = info["local"]
         else:
+            kind = "post" if u.rstrip("/").endswith("/") or not path_ext(u) \
+                else "other_asset"
             # Not recovered. Still rewrite it locally so nothing points at the
             # live domain; the file simply will not exist.
-            local = local_path(key, "post" if u.endswith("/") else "other_asset")
+            local = local_path(key, kind)
+            # If a `?ver=` variant of this same file was captured, use it:
+            # WordPress emits both spellings and only one may have been crawled.
+            if "?" not in key:
+                alt = self.versioned.get(key)
+                if alt:
+                    local = self.mapping[alt]["local"]
+                    key = alt
 
         self.referenced.add(local)
         if key not in self.mapping:
@@ -159,7 +216,10 @@ class Rewriter:
             t = self.target(m.group("url"))
             if t is None:
                 return m.group(0)
-            return f"{m.group('attr')}{m.group('q')}{t}{m.group('q')}"
+            q = m.groupdict().get("q")
+            if q is None:  # unquoted attribute value
+                return f"{m.group('attr')}{t}"
+            return f"{m.group('attr')}{q}{t}{q}"
 
         def srcset(m):
             parts = []
@@ -184,18 +244,177 @@ class Rewriter:
                 return m.group(0)
             return f"{m.group('attr')}{m.group('q')}{t}{m.group('q')}"
 
-        def _cssurl(m):
-            t = self.target(m.group("url"))
-            if t is None:
-                return m.group(0)
-            q = m.group("q")
-            return f"url({q}{t}{q})"
-
         text = ATTR_RE.sub(attr, text)
+        text = TITLE_ATTR_RE.sub(attr, text)
+        text = UNQUOTED_ATTR_RE.sub(attr, text)
         text = SRCSET_RE.sub(srcset, text)
         text = STYLE_ATTR_RE.sub(style, text)
         text = META_URL_RE.sub(meta, text)
+        text = DATA_ATTR_RE.sub(attr, text)
+        text = self.embedded_param(text)
+        text = self.unencoded_embed_param(text)
+        text = self.meta_url(text)
+        text = self.embedded_css(text)
+        text = self.repair_malformed(text)
+        text = self.prose_url(text)
         return text
+
+    def prose_url(self, text):
+        """
+        Rewrite a bare domain reference inside visible post text.
+
+        A handful of posts print the site's own address as prose ("la dirección
+        la pueden ver aca: http://negativeyouth.net/popisblack"). Those are not
+        attributes, but they are still references a visitor could follow to the
+        parked domain. Only the URL itself is replaced, so the sentence around
+        it is untouched.
+        """
+        # The preceding character must simply not be a word character, or part
+        # of the URL itself. `>` is fine and in fact required: these references
+        # sit as the visible text of an anchor, i.e. right after `>`.
+        pat = re.compile(
+            r'''(?P<pre>^\s*|[^\w])(?P<url>https?://(?:www\.)?negativeyouth\.net'''
+            r'''[^\s<>'")\]]*)''')
+
+        def repl(m):
+            t = self.target(m.group("url"))
+            if t is None:
+                return m.group(0)
+            return f"{m.group('pre')}{t}"
+
+        return pat.sub(repl, text)
+
+    def meta_url(self, text):
+        """
+        Rewrite a bare URL inside a meta content attribute.
+
+        og:description is frequently a sentence containing the site's own URL
+        ("…un nuevo url:http://negativeyouth.net/"), which the attribute rules
+        cannot match because the URL does not start the value. Rewriting just
+        the URL keeps the prose intact and removes the navigable reference.
+        """
+        bare = re.compile(
+            r'''(?P<attr>\bcontent\s*=\s*)(?P<q>["'])'''
+            r'''(?P<pre>[^"']*?)'''
+            r'''(?P<url>(?:https?:)?//(?:www\.)?negativeyouth\.net[^"'<> ]*)'''
+            r'''(?P<post>[^"']*?)(?P=q)''', re.I)
+
+        def repl(m):
+            t = self.target(m.group("url"))
+            if t is None:
+                return m.group(0)
+            return (f"{m.group('attr')}{m.group('q')}{m.group('pre')}{t}"
+                    f"{m.group('post')}{m.group('q')}")
+
+        return bare.sub(repl, text)
+
+    def repair_malformed(self, text):
+        """
+        Fix `http://http://host/...`, which some posts contain as literal text.
+
+        A handful of posts were written with a doubled scheme inside the href.
+        The doubled prefix means the URL does not resolve to our origin, so
+        dedupe_key() treats it as external and leaves it alone - leaving a
+        visitor-bound reference to the parked domain in the output.
+        """
+        pat = re.compile(r'(?P<pre>https?://)(?:https?://)+(?P<rest>[^"\'<> ]*)', re.I)
+
+        def repl(m):
+            t = self.target(m.group(0))
+            if t is None:
+                return m.group(0)
+            return t
+
+        return pat.sub(repl, text)
+
+    def embedded_param(self, text):
+        """
+        Point third-party embeds at the local copy of the page they embed.
+
+        Facebook's like plugin receives the page it is liking as a query
+        parameter of its own URL. The attribute rule correctly leaves that URL
+        alone, because the URL itself is third-party - but its *value* names
+        our parked domain, so the plugin would fetch whatever occupies
+        negativeyouth.net now. The value is rewritten while the embed stays.
+        """
+        pat = re.compile(
+            r'(?P<enc>%[0-9A-Fa-f]{2})|(?P<sep>[^0-9A-Za-z])|(?P<lit>[0-9A-Za-z])')
+
+        def fix_value(val):
+            out = []
+            for m in pat.finditer(val):
+                enc, sep, lit = m.group("enc"), m.group("sep"), m.group("lit")
+                if enc:
+                    out.append(enc)
+                elif sep:
+                    out.append(sep)
+                else:
+                    out.append(f"%{ord(lit):02x}")
+            joined = "".join(out)
+            try:
+                decoded = urllib.parse.unquote(joined)
+            except Exception:  # noqa: BLE001 - malformed escape sequence
+                return val
+            t = self.target(decoded)
+            if t is None:
+                return val
+            return re.sub(
+                r"(?<![0-9A-Za-z])[0-9A-Za-z](?![0-9A-Za-z])",
+                lambda mm: f"%{ord(mm.group(0)):02x}", t)
+
+        def repl(m):
+            new = fix_value(m.group("val"))
+            if new == m.group("val"):
+                return m.group(0)
+            return f"{m.group('pre')}{m.group('q')}{new}{m.group('q')}"
+
+        return EMBED_PARAM_RE.sub(repl, text)
+
+    def unencoded_embed_param(self, text):
+        """
+        Rewrite an unencoded page URL sitting inside a third-party embed URL.
+
+        Some Facebook like-iframes carry the page plainly rather than
+        percent-encoded, e.g. `like.php?href=http://negativeyouth.net/post/&…`.
+        Those are navigable references to the parked domain, so the value is
+        rewritten while the embed itself is left untouched.
+        """
+        pat = re.compile(
+            r'''(?P<pre>(?:href|srcdoc)=)(?P<q>["'])'''
+            r'''(?P<url>(?:https?:)?//[^"'<> ]*?negativeyouth\.net[^"'<> ]*)'''
+            r'''(?P<q2>["'])''', re.I)
+
+        def repl(m):
+            t = self.target(m.group("url"))
+            if t is None:
+                return m.group(0)
+            return f"{m.group('pre')}{m.group('q')}{t}{m.group('q2')}"
+
+        return pat.sub(repl, text)
+
+    def embedded_css(self, text):
+        """
+        Rewrite url() inside an inline <style> block.
+
+        Post-specific CSS is emitted as an inline <style> element, so the
+        attribute-based passes never see it. The Download Monitor plugin
+        injects its button background this way, which is why 1,027 pages still
+        referenced the live domain before this was handled.
+        """
+        pat = re.compile(r"(<style[^>]*>)(.*?)(</style>)", re.S | re.I)
+
+        def repl(m):
+            body = CSSURL_RE.sub(self._cssurl, m.group(2))
+            return m.group(1) + body + m.group(3)
+
+        return pat.sub(repl, text)
+
+    def _cssurl(self, m):
+        t = self.target(m.group("url"))
+        if t is None:
+            return m.group(0)
+        q = m.group("q")
+        return f"url({q}{t}{q})"
 
     def css(self, text):
         def repl(m):
@@ -360,6 +579,23 @@ def main():
     with open(rep, "w", encoding="utf-8") as f:
         f.write("\n".join(L))
     print(f"  wrote {rep}")
+
+    # ---- reconcile the map against what is actually on disk ---------------
+    # local_path() returns root-relative paths; os.walk yields relative ones.
+    # Normalise before comparing, or every file looks both missing and extra.
+    on_disk = set()
+    for root, _dirs, names in os.walk(SITE):
+        for n in names:
+            rel = os.path.relpath(os.path.join(root, n), SITE).replace(os.sep, "/")
+            on_disk.add("/" + rel)
+    declared = {v["local"] for v in mapping.values()}
+    absent = declared - on_disk
+    extra = on_disk - declared
+    print(f"  map/disk reconciliation: {len(on_disk)} files on disk, "
+          f"{len(absent)} mapped-but-absent, {len(extra)} on-disk-but-unmapped")
+    if extra:
+        for p in sorted(extra)[:10]:
+            print(f"      unmapped: {p}")
 
     # ---- totals ----------------------------------------------------------
     nfiles = sum(len(names) for _r, _d, names in os.walk(SITE))
