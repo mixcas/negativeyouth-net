@@ -389,6 +389,19 @@ def paginate(items, base_path, title, page_title_html, extra_head=""):
         else:
             local = _r6.local_path(f"{base_path}page/{page}/", "homepage")
         local = LOCALMAP.get(local, local)
+        # A captured page is the archive. Regenerating one would replace real
+        # theme output with a reconstruction, and the site changed its markup
+        # over time - /page/2/ was captured in Nov 2013 with `<h6 class=
+        # "entry-title">` inside `<div id="wrapper" class="hfeed">` and a
+        # 705px table, while the Feb 2015 homepage uses `<h3>`, a bare
+        # `class="hfeed"` and a 680px table. Both are authentic states; the
+        # captured one is the evidence, so it stays.
+        # The homepage is the one deliberate exception (§3.1): it is
+        # regenerated from the full inventory, after being copied to
+        # `_provenance/`.
+        if local in CAPTURED and local != _r6.local_path("/", "homepage"):
+            KEPT.append((local, base_path, page))
+            continue
         body = [page_title_html]
         nav = nav_html(base_path, page, total)
         if nav:
@@ -432,6 +445,8 @@ def write(local, text):
 
 LOCALMAP = {}
 TEMPLATE = ""
+CAPTURED = set()          # local paths that hold a captured page
+KEPT = []                 # (local, original key) captured pages left in place
 
 
 def main():
@@ -444,13 +459,15 @@ def main():
         print("  site/ missing - run 06_rewrite.py first", file=sys.stderr)
         return 1
 
-    # Local paths for every taxonomy page that WAS captured, so generated links
-    # point at real files.
+    # Local paths for every page that WAS captured, so generated links point at
+    # real files and - more importantly - so a reconstructed listing is never
+    # written over a captured one.
     with open(os.path.join(C.WORK, "filename-map.csv"), encoding="utf-8") as f:
         for r in csv.DictReader(f):
             if r["present"] == "yes":
-                LOCALMAP[_r6.local_path(r["original_key"].split("?")[0],
-                                        r["kind"])] = r["local_path"]
+                local = LOCALMAP[_r6.local_path(r["original_key"].split("?")[0],
+                                                r["kind"])] = r["local_path"]
+                CAPTURED.add(local)
 
     # Template: a captured date archive, which carries the theme's own listing
     # markup, header, sidebar and footer.
@@ -553,6 +570,11 @@ def main():
         for base, page, key, reason in IMBALANCE[:10]:
             print(f"    {base} page {page}: {key} - {reason}", file=sys.stderr)
         return 1
+    if KEPT:
+        print(f"  {len(KEPT)} page(s) of these listings were captured and were left "
+              f"untouched rather than regenerated:")
+        for local, base, page in KEPT:
+            print(f"    {local}  ({base} page {page})")
     print("  block balance check: div/table/tr/td balance in every generated entry")
     if sum(COSMETIC):
         print(f"  {sum(COSMETIC)} entries carry an unclosed phrasing tag (p/span/small), "

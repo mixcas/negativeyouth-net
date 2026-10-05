@@ -8,7 +8,7 @@ Measured 05 October 2026.
 |---|---:|
 | Files | **5,149** |
 | Directories | 3,743 |
-| Total size | **610.9 MB** |
+| Total size | **610.2 MB** |
 | HTML pages | 2,843 |
 | Largest file | 3.66 MB |
 
@@ -16,7 +16,7 @@ Measured 05 October 2026.
 
 | Type | Files | Size |
 |---|---:|---:|
-| .html | 2,843 | 406.17 MB |
+| .html | 2,843 | 405.51 MB |
 | .jpg | 994 | 132.74 MB |
 | .xml | 824 | 0.78 MB |
 | .png | 322 | 38.79 MB |
@@ -53,14 +53,14 @@ Measured 05 October 2026.
 
 | Host | Limit | This build | Verdict |
 |---|---|---|---|
-| Cloudflare Pages | 25,000 files | 5,149 files, 611 MB | **fits comfortably** |
-| GitHub Pages | 1 GB repo, 100 MB/file | 611 MB, largest 3.7 MB | **fits comfortably** |
+| Cloudflare Pages | 25,000 files | 5,149 files, 610 MB | **fits comfortably** |
+| GitHub Pages | 1 GB repo, 100 MB/file | 610 MB, largest 3.7 MB | **fits comfortably** |
 | Bluehost shared | inode caps often 2,000-5,000 | 5,149 files (2.6x a 2,000 cap) | **borderline - measure first** |
 
 At 5,149 files the build is over the file count that many shared
 hosting plans allow, and Bluehost's cap varies by plan. Disk space is a
 non-issue: the quota is measured in tens of gigabytes and this is
-611 MB.
+610 MB.
 
 If Bluehost refuses the upload, the fallback is Cloudflare Pages, which
 is comfortable at this size. Keeping the 851 feeds was the locked
@@ -71,33 +71,6 @@ decision, and it is the main reason the file count is where it is.
 - **960 posts** recovered, 3 permanently lost
 - **949** posts carry a recovered date
 - Spanning **2010-10-18** to **2013-07-03**
-
-## Markup integrity of generated listings
-
-**1,721** generated pages, **4,693** post entries, all structurally sound.
-
-| Check | Result |
-|---|---|
-| Entries nested inside another entry | **0** |
-| Entries left open at end of listing | **0** |
-| `<table>` left unclosed at end of listing | **0** |
-| Entries carrying the theme's 3-column table + metadata column | 4,693 / 4,693 |
-| Entries with an unclosed phrasing tag (`p`, `span`, `small`) | 4,689 |
-
-The phrasing-tag figure is inherited verbatim from the 2013 theme: several posts'
-metadata column reads `Autor:<a>jc</a><p>Tags: ...` with no closing tag at all.
-The HTML parser closes those at the next block boundary, so they cannot affect
-layout, and repairing them would mean inventing markup the capture never had.
-
-Surplus closing block tags were removed from **1** captured body
-(`/occultdλnϟσ-ufomania-negative-youth-2013-3`), which the original page's parser
-discarded but which would otherwise match a generated entry's own `</div>` and
-push the following posts out of `.hfeed`. See `RESTORE.md` Phase 8.
-
-This gate exists because of a real defect: an earlier extraction stripped the
-share-button block out to the next `<hr>`, which swallowed `</tr></tbody></table>`
-and left every entry holding an open table. Re-running the same check against
-that extraction flags **948 of 948** dated posts.
 
 ## Deploying to Bluehost
 

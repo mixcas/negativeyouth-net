@@ -1,8 +1,8 @@
 # Phase 6b - Internal link check
 
 Every same-origin reference in all **2,843** pages of `site/` was
-resolved against the output tree: **2,909,446** references checked,
-**32,267** unresolved.
+resolved against the output tree: **2,908,071** references checked,
+**32,217** unresolved.
 
 Almost none of this is a defect. The archive never crawled the vast
 majority of the site's generated views, and it never stored a single byte
@@ -10,16 +10,16 @@ of audio or video. The categories below make that concrete.
 
 | Category | Unresolved refs | Distinct targets | Why |
 |---|---:|---:|---|
-| uncaptured post (sidebar widget) | 18,724 | 38 |  |
+| uncaptured post (sidebar widget) | 18,736 | 38 |  |
 | WordPress PHP endpoint | 5,785 | 2 | cannot execute on static hosting |
-| date archive | 2,681 | 5 | month archive beyond 2013-06 was never captured |
-| tag page | 1,812 | 329 | only 143 of ~1,500 tags were captured by any crawler |
+| date archive | 2,683 | 5 | month archive beyond 2013-06 was never captured |
+| tag page | 1,767 | 329 | only 143 of ~1,500 tags were captured by any crawler |
 | trackback endpoint | 947 | 947 | XML-RPC pingback; was PHP, never captured |
-| other | 694 | 162 |  |
-| missing asset | 607 | 76 | thumbnail or file the archive never stored |
-| Tumblr-era page | 529 | 106 | pre-WordPress URL, only a handful captured |
-| audio / flash | 320 | 50 | NO media was ever archived by anyone |
-| author page | 114 | 19 | same: most author pages were never crawled |
+| other | 691 | 162 |  |
+| missing asset | 614 | 76 | thumbnail or file the archive never stored |
+| Tumblr-era page | 514 | 106 | pre-WordPress URL, only a handful captured |
+| audio / flash | 311 | 50 | NO media was ever archived by anyone |
+| author page | 115 | 19 | same: most author pages were never crawled |
 | attachment or feed page | 28 | 7 | WordPress auto-generated view |
 | category page | 20 | 17 | same: most category pages were never crawled |
 | archive page | 5 | 5 | WordPress archive view, never captured |
@@ -57,7 +57,7 @@ the intended behaviour for unrecoverable references, not a defect.
 | `/wp-content/plugins/really-simple-facebook-twitter-share-buttons/style.css` | 15 |
 | `/rss-d219a7/index.html` | 15 |
 | `/kinder-dieser-stadt-7ad48e/index.html` | 14 |
-| `/fotos-negative-babes-2-dbccc7/index.html` | 12 |
+| `/fotos-negative-babes-2-dbccc7/index.html` | 11 |
 | `/blissedout-2c6f6c/index.html` | 11 |
 | `/_host-http-tag-maligna-51be8e/index.html` | 10 |
 | `/jewelsofthenileinterview-0000e5/index.html` | 10 |
@@ -75,7 +75,6 @@ the intended behaviour for unrecoverable references, not a defect.
 | `/master-of-none-imagen11-fc2fdb/index.html` | 7 |
 | `/master-of-none-tumblr_lszan2a5741qlrj4w-f9a154/index.html` | 7 |
 | `/master-of-none-tumblr_lspl4eeene1qlrj4w-124969/index.html` | 7 |
-| `/_host-http-tags-vagina-vangi-4f6a39/index.html` | 7 |
 | `/salem-1ba90d/index.html` | 7 |
 | `/lemonade-ea8f2c/index.html` | 6 |
 | `/washed-out-db22bd/index.html` | 6 |
@@ -83,7 +82,7 @@ the intended behaviour for unrecoverable references, not a defect.
 | `/the-coven-thumb-1-874bb1/index.html` | 6 |
 | `/the-coven-thumb-2c1eb6/index.html` | 6 |
 | `/the-coven-crop-top-55-f1498e/index.html` | 6 |
-| `/resena-health-y-teatro-fru-fru-42a997/index.html` | 6 |
+| `/_host-http-tags-vagina-vangi-4f6a39/index.html` | 6 |
 | `/litanic-mask-virgin-spring-video-interview-281570/index.html` | 5 |
 | `/blackmilk-tumblr_lrpvlq1hdm1qekrnyo1_500-f5fb86/index.html` | 5 |
 | `/blackmilk-tumblr_lo92njv4iq1qd3rrro1_500-62145c/index.html` | 5 |
@@ -91,6 +90,7 @@ the intended behaviour for unrecoverable references, not a defect.
 | `/physical-therapy-40784c/index.html` | 5 |
 | `/holy-other-ed79d0/index.html` | 5 |
 | `/tri-angle-0b0f41/index.html` | 5 |
+| `/resena-health-y-teatro-fru-fru-42a997/index.html` | 5 |
 | `/sexy-sweaters-foto-sueter-d77ea8/index.html` | 4 |
 | `/roberto-sanchez-rs2x-19b106/index.html` | 4 |
 | `/roberto-sanchez-rs10x-aa94e7/index.html` | 4 |
