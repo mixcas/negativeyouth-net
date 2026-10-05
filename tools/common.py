@@ -151,24 +151,31 @@ def slugify(path):
     case-insensitive and normalising, so writing them verbatim would silently
     collide. NFC normalisation plus a short hash of the original encoded path
     keeps names readable while guaranteeing uniqueness.
+
+    Case is folded *before* hashing, not just in the display name. The theme
+    emitted some tag links with the author's capitalisation (`/tag/Ana-Caprix/`)
+    while the stored slug was lowercase, so hashing case-sensitively produced
+    two directories for one tag - `/tag-Ana-Caprix-<hash>` and
+    `/tag-ana-caprix-<hash>` - and the links pointed at the one that the
+    generated pages never created. Since the target filesystem is
+    case-insensitive, two spellings can only ever be one file.
     """
     import hashlib as _h
     import unicodedata
 
     decoded = urllib.parse.unquote(path).strip("/")
-    decoded = unicodedata.normalize("NFC", decoded)
+    decoded = unicodedata.normalize("NFC", decoded).lower()
     keep = []
     for ch in decoded:
         if ch.isalnum() or ch in "-_.~":
             keep.append(ch)
-        elif ch in " \t":
-            keep.append("-")
         else:
             keep.append("-")
     name = re.sub(r"-{2,}", "-", "".join(keep)).strip("-")[:80].strip("-")
     if not name:
         name = "index"
-    digest = _h.blake2b(path.encode("utf-8"), digest_size=3).hexdigest()
+    canonical = unicodedata.normalize("NFC", path).lower()
+    digest = _h.blake2b(canonical.encode("utf-8"), digest_size=3).hexdigest()
     return f"{name}-{digest}"
 
 

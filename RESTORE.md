@@ -5,13 +5,19 @@ sourced entirely from web.archive.org, and re-host it at the recovered domain.
 
 **Target output:** pixel-faithful mirror of the original 2010–2013 "Sandbox" WordPress theme.
 
-**Status:** Phases 1-3 complete, Phases 4-10 pending.
+**Status:** Phases 1-8 complete. Phase 9 (hosting artifacts and deploy) pending.
 
 | Phase | Report | Data |
 |---|---|---|
 | 1 manifest | `_reports/manifest.md` | `_work/manifest.csv` |
 | 2 completeness | `_reports/completeness.md` | `_work/posts.csv`, `_work/pagination.csv` |
 | 3 feeds | `_reports/feeds.md` | `_work/feeds.csv` |
+| 4 fetch | `_reports/fetch.md` | `_cache/` |
+| 5 verify | `_reports/verify.md` | `_work/verify.csv` |
+| 6 rewrite | `_reports/missing-assets.md` | `_work/filename-map.csv` |
+| 6b link check | `_reports/linkcheck.md` | — |
+| 7 generate | `_reports/build.md` | `site/` |
+| 8 provenance | `_reports/build.md` | `site/`, `posts.csv`, `posts.json` |
 
 ---
 
@@ -351,6 +357,37 @@ preserved homepage (§3.1):
 - Any tag / category / author page that exists in post metadata but was not captured
   (128 tags captured; the posts reference more)
 
+A listing entry's body is the post's own `.entry-content`, copied verbatim from
+the post's captured page, running from the `entry-content` div to the theme's
+`<!-- .post -->` marker. **Do not "tidy" that region.** Two earlier attempts
+both damaged it, and the damage is invisible in a diff but obvious in a browser:
+
+- A div-depth scan for the end of the body ran past the post into the sidebar,
+  because these posts carry markup inside HTML comments and attribute values
+  where the tags do not balance in the raw text.
+- A regex removing the share buttons ran from the share div to the next `<hr>`.
+  The share block sits *inside* the post's three-column table, so that range
+  swallowed `</h3></td>`, the metadata column and `</tr></tbody></table>`.
+  Each entry was left holding an open `<table>`, so the browser pulled every
+  following post into the previous post's table.
+
+The share buttons are not tidied away: the captured 2013-06 archive contains
+them inside its own entries, so the theme rendered them on archive pages too.
+
+Every generated entry is checked for block balance before the tree is reported
+as good (§6). An unclosed `div`/`table`/`tr`/`td` swallows its siblings, so this
+is a build gate, not a lint. Unclosed *phrasing* tags (`p`, `span`, `small`) are
+counted but not fatal: the HTML parser closes them at the next block boundary,
+and the 2013 theme genuinely emitted them unbalanced — several posts' metadata
+column reads `Autor:<a>jc</a><p>Tags: ...` with no closing tag at all.
+
+The one sanctioned edit to a captured body: surplus closing block tags are
+dropped. `/occultdλnϟσ-ufomania-negative-youth-2013-3` ends its content with a
+`</div>` after a `clear:both` spacer, giving 8 opens and 9 closes. The parser
+discarded that token on the original page, but inside a generated listing it
+would match the entry's own close and push the following posts out of `.hfeed`.
+Deleting it removes a token the browser was ignoring anyway and adds no markup.
+
 ### Phase 9 · Provenance
 Because this is an archival site, it must be honest about what it is:
 
@@ -408,6 +445,12 @@ The build fails loudly rather than shipping a broken archive:
    length predictions.
 6. **No-live-domain gate** — zero references to the live `negativeyouth.net`
    anywhere in `site/`.
+7. **Block-balance gate** — every generated listing entry has balanced
+   `div`/`table`/`tr`/`td`/`ul`/`ol`/`blockquote` tags, and a parser walk of
+   every generated listing finds no post entry nested inside another and none
+   left open. An unclosed block tag silently swallows the posts after it, which
+   is invisible in a diff and obvious on screen, so this is checked at build time
+   rather than by eye.
 
 ---
 
@@ -423,9 +466,13 @@ python3 tools/03_feeds.py           # RSS analysis (comment feeds, not content)
 python3 tools/04_fetch.py           # background, 3–5 hrs, resumable
 python3 tools/05_verify.py          # integrity gate
 python3 tools/06_rewrite.py         # links + asset reconciliation
-python3 tools/07_generate.py        # homepage, pagination, missing archives
-python3 tools/08_report.py          # size + gaps + dead embeds  ← REVIEW HERE
+python3 tools/07_linkcheck.py       # internal link gate
+python3 tools/08_generate.py        # homepage, pagination, missing archives, balance gate
+python3 tools/09_provenance.py      # footers, posts.csv/json, build report  ← REVIEW HERE
 ```
+
+`06_rewrite.py` clears and rebuilds `site/`, so it must finish **before**
+`08_generate.py` runs. `09_provenance.py` is idempotent and runs last.
 
 **Two human review points:** after Phase 2, when the true post count and the list of
 known gaps are known; and after Phase 10, when the real file count decides the host.
@@ -450,3 +497,17 @@ interruption is always safe.
 - **Why feeds are kept.** They are a second content source (Phase 3) and a primary
   artifact in their own right. They are also the cheapest insurance against a
   future loss — a CSV of every post survives even if the HTML does not.
+- **Why generated markup is copied, never tidied.** Every listing entry is built
+  from the theme's own captured output, so the listing can only be as faithful
+  as the extraction. Extraction is where the fidelity was lost: two plausible
+  "cleanup" passes each removed real structure (see Phase 8 above), and both
+  produced output that looked correct as a diff. The lesson generalises — on a
+  mirror, a tag that renders is data, and a regex that "tidies" markup cannot
+  tell the two apart. The balance gate exists because of it.
+- **Why the four captures containing link-farm markup are kept as-is.** Four
+  pages (`/nommo-ogo/`, `/later-fags/`, `/nin-x-david-lynch/`, `/tagged/gatekeeper/`)
+  were captured in a May–June 2014 window where the site carried injected
+  pharmaceutical link lists hidden by a `display:none` script. This is not a
+  defect in the mirror: it is what those captures contain, and the archive's job
+  is to reproduce the archive. The site owner's call was to keep it unchanged.
+  Recorded here so the decision is not mistaken for an oversight later.

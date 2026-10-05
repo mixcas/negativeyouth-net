@@ -1,7 +1,7 @@
 # Phase 6 - Missing assets
 
 Every same-origin reference in every downloaded page and stylesheet was
-resolved against the archive. **6802** distinct local
+resolved against the archive. **6797** distinct local
 paths are referenced. Of those, **3318** were never
 recovered by any crawler.
 

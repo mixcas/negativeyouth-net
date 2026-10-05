@@ -1,8 +1,8 @@
 # Phase 6b - Internal link check
 
-Every same-origin reference in all **1,160** pages of `site/` was
-resolved against the output tree: **1,087,212** references checked,
-**19,051** unresolved.
+Every same-origin reference in all **2,843** pages of `site/` was
+resolved against the output tree: **2,909,446** references checked,
+**32,267** unresolved.
 
 Almost none of this is a defect. The archive never crawled the vast
 majority of the site's generated views, and it never stored a single byte
@@ -10,18 +10,18 @@ of audio or video. The categories below make that concrete.
 
 | Category | Unresolved refs | Distinct targets | Why |
 |---|---:|---:|---|
-| uncaptured post (sidebar widget) | 6,955 | 38 |  |
-| tag page | 5,365 | 1,425 | only 143 of ~1,500 tags were captured by any crawler |
-| WordPress PHP endpoint | 2,419 | 2 | cannot execute on static hosting |
-| date archive | 2,027 | 43 | month archive beyond 2013-06 was never captured |
+| uncaptured post (sidebar widget) | 18,724 | 38 |  |
+| WordPress PHP endpoint | 5,785 | 2 | cannot execute on static hosting |
+| date archive | 2,681 | 5 | month archive beyond 2013-06 was never captured |
+| tag page | 1,812 | 329 | only 143 of ~1,500 tags were captured by any crawler |
 | trackback endpoint | 947 | 947 | XML-RPC pingback; was PHP, never captured |
-| other | 481 | 163 |  |
-| missing asset | 479 | 76 | thumbnail or file the archive never stored |
-| Tumblr-era page | 198 | 107 | pre-WordPress URL, only a handful captured |
-| audio / flash | 68 | 50 | NO media was ever archived by anyone |
-| author page | 59 | 19 | same: most author pages were never crawled |
-| category page | 40 | 18 | same: most category pages were never crawled |
-| attachment or feed page | 7 | 7 | WordPress auto-generated view |
+| other | 694 | 162 |  |
+| missing asset | 607 | 76 | thumbnail or file the archive never stored |
+| Tumblr-era page | 529 | 106 | pre-WordPress URL, only a handful captured |
+| audio / flash | 320 | 50 | NO media was ever archived by anyone |
+| author page | 114 | 19 | same: most author pages were never crawled |
+| attachment or feed page | 28 | 7 | WordPress auto-generated view |
+| category page | 20 | 17 | same: most category pages were never crawled |
 | archive page | 5 | 5 | WordPress archive view, never captured |
 | 404 page | 1 | 1 | WordPress error document |
 
@@ -40,7 +40,7 @@ of audio or video. The categories below make that concrete.
 
 ## Unclassified references
 
-**163** distinct targets do not resolve and do not fit any known
+**162** distinct targets do not resolve and do not fit any known
 category.
 
 **None of them correspond to a page we hold.** Every one is a path the
@@ -53,57 +53,57 @@ the intended behaviour for unrecoverable references, not a defect.
 | Target | Referenced |
 |---|---:|
 | `/wp-includes/js/l10n.js-qver-20101110-a46a72` | 104 |
+| `/popisblack-d4b2b8/index.html` | 30 |
 | `/wp-content/plugins/really-simple-facebook-twitter-share-buttons/style.css` | 15 |
 | `/rss-d219a7/index.html` | 15 |
 | `/kinder-dieser-stadt-7ad48e/index.html` | 14 |
+| `/fotos-negative-babes-2-dbccc7/index.html` | 12 |
+| `/blissedout-2c6f6c/index.html` | 11 |
+| `/_host-http-tag-maligna-51be8e/index.html` | 10 |
+| `/jewelsofthenileinterview-0000e5/index.html` | 10 |
+| `/glasspopcorn-interview-33d561/index.html` | 9 |
 | `/wp-content/plugins/jetpack/modules/widgets/widgets.css-qver-20120924-f632` | 9 |
 | `/wp-content/plugins/download-monitor/page-addon/styles.css-qver-3.4.2-e881` | 9 |
 | `/wp-content/plugins/really-simple-facebook-twitter-share-buttons/style.css` | 9 |
 | `/wp-content/plugins/jquery-archive-list-widget/jal.js-qver-3.4.2-e88135` | 9 |
-| `/popisblack-d4b2b8/index.html` | 6 |
-| `/glasspopcorn-interview-33d561/index.html` | 5 |
-| `/_host-http-tag-maligna-51be8e/index.html` | 4 |
-| `/_host-http-tags-vagina-vangi-4f6a39/index.html` | 4 |
+| `/search-puro-instinct-be8373/index.html` | 9 |
+| `/arts-and-crafts-455187/index.html` | 7 |
+| `/master-of-none-246680_201943666515817_122389604471224_543606_5162273_n-41` | 7 |
+| `/master-of-none-imagen3-b48c9d/index.html` | 7 |
+| `/master-of-none-tumblr_ln7rgufoeq1qlrj4w-0e5b73/index.html` | 7 |
+| `/master-of-none-imagen4-8f3181/index.html` | 7 |
+| `/master-of-none-imagen11-fc2fdb/index.html` | 7 |
+| `/master-of-none-tumblr_lszan2a5741qlrj4w-f9a154/index.html` | 7 |
+| `/master-of-none-tumblr_lspl4eeene1qlrj4w-124969/index.html` | 7 |
+| `/_host-http-tags-vagina-vangi-4f6a39/index.html` | 7 |
+| `/salem-1ba90d/index.html` | 7 |
+| `/lemonade-ea8f2c/index.html` | 6 |
+| `/washed-out-db22bd/index.html` | 6 |
+| `/the-coven-velvet-cape-72-copy-c0d0a2/index.html` | 6 |
+| `/the-coven-thumb-1-874bb1/index.html` | 6 |
+| `/the-coven-thumb-2c1eb6/index.html` | 6 |
+| `/the-coven-crop-top-55-f1498e/index.html` | 6 |
+| `/resena-health-y-teatro-fru-fru-42a997/index.html` | 6 |
+| `/litanic-mask-virgin-spring-video-interview-281570/index.html` | 5 |
+| `/blackmilk-tumblr_lrpvlq1hdm1qekrnyo1_500-f5fb86/index.html` | 5 |
+| `/blackmilk-tumblr_lo92njv4iq1qd3rrro1_500-62145c/index.html` | 5 |
+| `/blackmilk-tumblr_lrs2vyefql1qjray4o1_500ok-f3f42a/index.html` | 5 |
+| `/physical-therapy-40784c/index.html` | 5 |
+| `/holy-other-ed79d0/index.html` | 5 |
+| `/tri-angle-0b0f41/index.html` | 5 |
+| `/sexy-sweaters-foto-sueter-d77ea8/index.html` | 4 |
+| `/roberto-sanchez-rs2x-19b106/index.html` | 4 |
+| `/roberto-sanchez-rs10x-aa94e7/index.html` | 4 |
+| `/roberto-sanchez-rs8x-d23fe8/index.html` | 4 |
+| `/roberto-sanchez-rs4x-377b8f/index.html` | 4 |
+| `/roberto-sanchez-rs3x-c8a781/index.html` | 4 |
+| `/roberto-sanchez-rs7x-4996e5/index.html` | 4 |
+| `/roberto-sanchez-rs6x-bde9b5/index.html` | 4 |
+| `/roberto-sanchez-rs5x-c115a8/index.html` | 4 |
+| `/roberto-sanchez-flyer-40d6bf/index.html` | 4 |
 | `/wp-content/plugins/really-simple-facebook-twitter-share-buttons/style.css` | 4 |
-| `/wp-content/plugins/jquery-archive-list-widget/jal.js-qver-3.3.1-fdee51` | 4 |
-| `/we-cant-stop-54ebb9/index.html` | 4 |
-| `/rvver-a887e4/index.html` | 4 |
-| `/blissedout-2c6f6c/index.html` | 3 |
-| `/search-puro-instinct-be8373/index.html` | 3 |
-| `/the-red-wing-4a640f/index.html` | 3 |
-| `/serpent-remixes-gatekeeper-750e0b/index.html` | 3 |
-| `/just-for-hits-richard-dawkins-feed-5b3a85/index.html` | 2 |
-| `/jj-2-feed-dff869/index.html` | 2 |
-| `/zola-jesus-en-mexico-2-feed-8f20af/index.html` | 2 |
-| `/pictureplane-en-mexico-4-feed-c5b8ca/index.html` | 2 |
-| `/planningtorock-the-knife-doorway-2-feed-6e6c5a/index.html` | 2 |
-| `/dipset-trance-party-2-feed-c43860/index.html` | 2 |
-| `/patrick-wolf-esta-de-vuelta-2-feed-7e7165/index.html` | 2 |
-| `/angelina-pivarnick-im-hot-2-feed-5ffc52/index.html` | 2 |
-| `/black-yellow-vs-green-yellow-2-feed-e43065/index.html` | 2 |
-| `/entrevista-con-jewels-of-the-nile-mp3s-2-feed-730a7f/index.html` | 2 |
-| `/jewelsofthenileinterview-0000e5/index.html` | 2 |
-| `/pop-is-black-2-feed-af60fc/index.html` | 2 |
-| `/holy-other-touch-2-feed-bb84e8/index.html` | 2 |
-| `/unison-blood-blood-blood-2-feed-57fb46/index.html` | 2 |
-| `/fotos-negative-babes-2-dbccc7/index.html` | 2 |
-| `/geneva-jacuzzi-bad-moods-2-feed-e722be/index.html` | 2 |
-| `/avalanche-slow-feed-1b0fbb/index.html` | 2 |
-| `/la-ultima-fiesta-del-ano-2-feed-613d4f/index.html` | 2 |
-| `/the-firm-feed-63dbdf/index.html` | 2 |
-| `/myr-l3wyckøff-2-feed-eed2b6/index.html` | 2 |
-| `/mas-nike7up-2-feed-54269a/index.html` | 2 |
-| `/video-not-in-love-2-feed-68eaf4/index.html` | 2 |
-| `/maluca-hector-2-feed-88f876/index.html` | 2 |
-| `/mentira-mentira-turnaway-2-feed-d24cbe/index.html` | 2 |
-| `/gif-mashup-2-feed-84ba01/index.html` | 2 |
-| `/alexico-gordo-grande-y-marica-2-feed-755713/index.html` | 2 |
-| `/hard-as-a-motherfucker-2-feed-497cf7/index.html` | 2 |
-| `/all-american-orgy-2-feed-fbdcb3/index.html` | 2 |
-| `/6-foot-7-foot-2-feed-1ad0ba/index.html` | 2 |
-| `/inca-gold-2-feed-2afde2/index.html` | 2 |
 
-_...and 113 more._
+_...and 112 more._
 
 ## What is not broken
 
