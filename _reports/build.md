@@ -16,7 +16,7 @@ Measured 05 October 2026.
 
 | Type | Files | Size |
 |---|---:|---:|
-| .html | 2,843 | 405.51 MB |
+| .html | 2,843 | 405.52 MB |
 | .jpg | 994 | 132.74 MB |
 | .xml | 824 | 0.78 MB |
 | .png | 322 | 38.79 MB |
@@ -71,6 +71,50 @@ decision, and it is the main reason the file count is where it is.
 - **960 posts** recovered, 3 permanently lost
 - **949** posts carry a recovered date
 - Spanning **2010-10-18** to **2013-07-03**
+
+## Layout integrity of generated listings
+
+**1,683** generated pages, **4,503** post entries, all structurally sound.
+
+| Check | Result |
+|---|---|
+| Entries nested inside another entry | **0** |
+| Entries left open at end of listing | **0** |
+| `<table>` left unclosed at end of listing | **0** |
+| `#content` region out of balance | **0** |
+| Closing markup differing from the template | **0** |
+| Entries carrying the theme's 3-column table + metadata column | 4,503 / 4,503 |
+
+Measured in Chrome at 1280px, the three columns land where the theme's CSS puts
+them: left sidebar `x=58`, content `x=271` (`margin-left:213px`), right sidebar
+`x=999`, body `1150px` wide.
+
+Two defects in this phase were invisible in a diff and only showed up in a
+browser. Both are recorded in `RESTORE.md` §5 Phase 8:
+
+1. **The splice dropped the `</div>` closing `#content`**, so the line labelled
+   `#container` closed `#content` and left the sidebars inside `#container` —
+   which the theme sets to `float:left; width:0px`. They fell below the content
+   instead of beside it, the left one to x=-151. The Feb 2015 homepage capture in
+   `_provenance/` has the same missing tag, so the site's own final state was
+   laid out this way; matching it byte-for-byte reproduced the breakage.
+2. **Pagination ran backwards.** The theme floats `.nav-next` right and
+   `.nav-previous` left, and the Feb 2015 homepage keeps `Siguiente posts »`
+   (forward) in `nav-next`. The generated back-link was labelled `Older posts`
+   while pointing at *newer* posts, and the captured `/page/2/` had both divs
+   swapped, so `Siguiente` rendered on the left and `Anterior` on the right. Two
+   captured navigation blocks repaired; 1,053 post pages with `nav-next` holding
+   post titles are untouched.
+
+An unclosed phrasing tag (`p`, `span`, `small`) appears in 4,499 entries,
+inherited verbatim from the 2013 theme: several posts' metadata column reads
+`Autor:<a>jc</a><p>Tags: ...` with no closing tag at all. The HTML parser closes
+those at the next block boundary, so they cannot affect layout, and repairing
+them would mean inventing markup the capture never had.
+
+Surplus closing block tags were removed from **1** captured body
+(`/occultdλnϟσ-ufomania-negative-youth-2013-3`), which the original page's parser
+discarded but which would otherwise match a generated entry's own `</div>`.
 
 ## Deploying to Bluehost
 

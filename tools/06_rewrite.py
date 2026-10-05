@@ -151,6 +151,11 @@ DATA_ATTR_RE = re.compile(
     r'''(?P<q>["'])(?P<url>[^"']*negativeyouth\.net[^"']*)(?P=q)''', re.I)
 
 
+# Navigation blocks whose two links were swapped into the wrong divs, by the
+# theme itself. Reported, never applied silently.
+NAV_REPAIRED = []
+
+
 class Rewriter:
     def __init__(self, mapping):
         self.mapping = mapping
@@ -256,6 +261,7 @@ class Rewriter:
         text = self.meta_url(text)
         text = self.embedded_css(text)
         text = self.repair_malformed(text)
+        text = self.repair_nav_inversion(text)
         text = self.prose_url(text)
         return text
 
@@ -307,6 +313,94 @@ class Rewriter:
                     f"{m.group('post')}{m.group('q')}")
 
         return bare.sub(repl, text)
+
+    # Words that identify a nav link's direction, in the languages the site used.
+    # Only these are ever considered: post pages carry `nav-previous`/`nav-next`
+    # divs too, but they hold post titles, and must not be touched.
+    #
+    # The arrows are stripped before matching. `« Siguiente »` leaves a leading
+    # `&laquo;` once the tags are removed, so anchoring at `^\s*` alone would
+    # never match and the repair would silently do nothing.
+    # Arrow glyphs the theme put beside each label, stripped before matching: once
+    # the tags are removed `« Siguiente »` leaves a leading `&laquo;`, so a match
+    # anchored at `^` would never fire and the repair would silently do nothing.
+    _ARROWS = re.compile(r"&laquo;|&raquo;|&#171;|&#187;|«|»", re.I)
+    # "Siguiente" and "Older posts" both mean forward in time (page N+1);
+    # "Anterior" and "Newer posts" both mean back (page N-1).
+    _FWD = re.compile(r"^(?:Siguiente|Older posts)", re.I)
+    _BACK = re.compile(r"^(?:Anterior|Newer posts)", re.I)
+
+    def repair_nav_inversion(self, text):
+        """
+        Put each pagination link back in the div its direction implies.
+
+        The theme's CSS is unambiguous about where the two links belong:
+
+            div.navigation div.nav-next     { float: right }
+            div.navigation div.nav-previous { float: left }
+
+        and the site's last surviving state agrees - the Feb 2015 homepage has
+        its only link, `Siguiente posts »` pointing forward to page 2, inside
+        `nav-next`. So forward lives on the right, back on the left.
+
+        The captured `/page/2/` has both divs swapped: `« Siguiente` (forward,
+        to page 3) sits in the left-floating `nav-previous`, and `Anterior »`
+        (back, to page 1) sits in the right-floating `nav-next`. A visitor reads
+        that as "Siguiente on the left, Anterior on the right", i.e. backwards.
+
+        Only a pair whose *labels* prove the inversion is swapped, and only
+        within one navigation block. The labels are what identify the direction
+        here, so the hrefs are left completely alone - this corrects placement,
+        never destination. An empty div is left as it is, since WordPress emits
+        one whenever only one direction exists.
+        """
+        block = re.compile(
+            r'(<div id="nav-(?:above|below)" class="navigation">)(.*?)(\n\s*</div>)',
+            re.S)
+        div = re.compile(r'<div class="nav-(previous|next)">\s*(<a\b.*?</a>)\s*</div>',
+                         re.S)
+
+        def swap(m):
+            open_tag, inner, close = m.groups()
+            divs = list(div.finditer(inner))
+            if len(divs) != 2:
+                return m.group(0)
+
+            def direction(mm):
+                label = self._ARROWS.sub(" ", re.sub(r"<[^>]*>", " ", mm.group(2)))
+                label = label.strip()
+                if self._FWD.match(label):
+                    return "next"
+                if self._BACK.match(label):
+                    return "previous"
+                return None
+
+            # `got` is keyed by the direction the label *states*, so a complete
+            # pair means one link claims forward and the other claims back.
+            got = {direction(d): d for d in divs}
+            if got.get("next") is None or got.get("previous") is None:
+                return m.group(0)      # not a direction pair we recognise
+            fwd, back = got["next"], got["previous"]
+            if fwd.group(1) == "next" and back.group(1) == "previous":
+                return m.group(0)      # already correct
+
+            NAV_REPAIRED.append(open_tag)
+            # Rebuild both divs in one pass against the original offsets: `next`
+            # and `previous` differ in length, so a second substitution would be
+            # applied at stale positions.
+            # Keep document order: whichever div came first in the source must stay
+            # first, only its class changes.
+            ordered = sorted(((fwd, "nav-next"), (back, "nav-previous")),
+                             key=lambda pair: pair[0].start())
+            out, cursor = [], 0
+            for mm, cls in ordered:
+                out.append(inner[cursor:mm.start()])          # whitespace between
+                out.append(f'<div class="{cls}">{mm.group(2)}</div>')
+                cursor = mm.end()
+            out.append(inner[cursor:])
+            return open_tag + "".join(out) + close
+
+        return block.sub(swap, text)
 
     def repair_malformed(self, text):
         """
@@ -523,6 +617,14 @@ def main():
                 live_refs += 1
     print(f"  purity: web-static.archive.org references = {live_refs} (must be 0)")
     print(f"  feed files left verbatim (canonical URLs preserved)")
+    if NAV_REPAIRED:
+        uniq = sorted(set(NAV_REPAIRED))
+        print(f"  pagination repaired on {len(uniq)} captured navigation block(s): "
+              f"the theme put each link in the opposite div from the one its "
+              f"label implies, so 'Siguiente' rendered on the left and "
+              f"'Anterior' on the right")
+        for b in uniq:
+            print(f"    {b}")
 
     # ---- missing assets --------------------------------------------------
     L = [

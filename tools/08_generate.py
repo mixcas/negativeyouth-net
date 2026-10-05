@@ -54,7 +54,9 @@ CONTENT_OPEN = '<div id="content">'
 # The theme closed this region two different ways across its lifetime: early
 # pages say `<!-- #content -->` and later ones `<!-- #content .hfeed -->`. A
 # template only matches one, so both are accepted. Splicing resumes at the
-# comment, leaving the surrounding `</div>` that closes #content in place.
+# `</div>` that immediately precedes this comment - that tag closes #content, so
+# dropping it swallows #primary/#secondary/#footer into #container. See
+# `render()`.
 CONTENT_CLOSE = re.compile(r'<!--\s*#content[^>]*-->')
 
 SPANISH_MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -354,14 +356,32 @@ def assert_balanced(entries):
 
 
 def nav_html(base_path, page, total_pages):
-    """`« Older posts` / `Siguiente posts »`, matching the theme's markup."""
+    """
+    `« Anterior` / `Siguiente posts »`, matching the theme's final markup.
+
+    The arrangement is fixed by the theme's own CSS:
+
+        div.navigation div.nav-next     { float: right }
+        div.navigation div.nav-previous { float: left }
+
+    and by the site's last surviving state, the Feb 2015 homepage: its only
+    link is `Siguiente posts »` inside `nav-next`, pointing forward to page 2.
+    So forward sits on the right in `nav-next`, and the back link belongs on the
+    left in `nav-previous`.
+
+    This was previously labelled `Older posts`, which is wrong twice over: it
+    points at page N-1, which holds *newer* posts, and it sits in the div whose
+    label means the opposite direction. The captured `/page/2/` has the same
+    fault in the theme's own output - `« Siguiente` in the left div and
+    `Anterior »` in the right - which is repaired in `repair_nav_inversion()`.
+    """
     out = []
     if page > 1:
         prev = base_path if page == 2 else f"{base_path}page/{page - 1}/"
         prev = _r6.local_path(prev, "homepage")
         prev = LOCALMAP.get(prev, prev)
         out.append(f'<div class="nav-previous"><a href="{prev}" >'
-                   f'<span class="meta-nav">&laquo;</span> Older posts</a></div>')
+                   f'<span class="meta-nav">&laquo;</span> Anterior</a></div>')
     if page < total_pages:
         nxt = f"{base_path}page/{page + 1}/"
         nxt = _r6.local_path(nxt, "homepage")
@@ -430,7 +450,40 @@ def render(content, extra_head=""):
     if i < 0 or not m:
         raise SystemExit("template does not contain a content block")
     head = doc[: i + len(CONTENT_OPEN)]
-    tail = doc[m.start():]
+    # The tail must start at the `</div>` that closes `#content`, not at the
+    # comment itself.
+    #
+    # The theme ends a listing with:
+    #
+    #     ...nav-below...
+    #     </div><!-- #content .hfeed -->     <- closes #content
+    #     </div><!-- #container -->          <- closes #container
+    #     <div id="primary" class="sidebar">
+    #
+    # Splicing from the comment dropped that first `</div>`, so the line
+    # labelled `#container` ended up closing `#content` instead, leaving
+    # `#primary`, `#secondary` and `#footer` inside `#container`.
+    #
+    # That matters because the theme's own CSS is:
+    #
+    #     div#container { float:left; width:0px; }
+    #
+    # A zero-width float cannot place the 209px sidebars beside the 704px
+    # content column, so they dropped below it - the right sidebar to x=-151,
+    # off the left edge of the page. The page still had three columns, just not
+    # the three columns the theme was designed to show, and it looked broken
+    # rather than wrong.
+    #
+    # Worth recording: the Feb 2015 homepage capture in `_provenance/` has the
+    # same missing `</div>`, so the site's own final state really was laid out
+    # this way, and matching it byte-for-byte reproduced the breakage. The
+    # working captures (the 2013-06 template, the Nov 2013 /page/2/) all have
+    # the tag. Fidelity to the last capture and fidelity to how the theme
+    # actually rendered are not the same thing, and here they disagree.
+    close = doc.rfind("</div>", i + len(CONTENT_OPEN), m.start())
+    if close < 0:
+        raise SystemExit("template has no </div> before the #content comment")
+    tail = doc[close:]
     if extra_head:
         head = head.replace("</head>", extra_head + "\n</head>", 1)
     return head + "\n" + content + "\n\t\t" + tail

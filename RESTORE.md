@@ -388,6 +388,53 @@ discarded that token on the original page, but inside a generated listing it
 would match the entry's own close and push the following posts out of `.hfeed`.
 Deleting it removes a token the browser was ignoring anyway and adds no markup.
 
+Two defects in this phase were invisible in the markup diff and only showed up
+in a browser, so both are now build gates.
+
+**The splice must resume at the `</div>` before the `#content` comment, not at
+the comment.** The theme ends a listing with
+
+```
+…nav-below…
+</div><!-- #content .hfeed -->     <- closes #content
+</div><!-- #container -->          <- closes #container
+<div id="primary" class="sidebar">
+```
+
+Splicing from the comment dropped that first `</div>`, so the line labelled
+`#container` closed `#content` instead and left `#primary`, `#secondary` and
+`#footer` **inside** `#container` — which the theme sets to `float:left;
+width:0px`. The sidebars then could not sit beside the 704px content column: they
+fell below it, the left one to x=-151, off the left edge of the page. Three
+columns present, none of them in the right place.
+
+The Feb 2015 homepage capture in `_provenance/` has the same missing `</div>`, so
+the site's own final state really was laid out this way and matching it
+byte-for-byte reproduced the breakage. The working captures — the 2013-06
+template and the Nov 2013 `/page/2/` — both have the tag. Fidelity to the last
+capture and fidelity to how the theme actually rendered are not the same thing,
+and here they disagree. Gate: the region from `<div id="content">` to the
+`<!-- #content` comment must be net-zero divs, and the closing markup must match
+the template's byte-for-byte.
+
+**Pagination direction follows the theme's CSS, not the labels in isolation.**
+`.nav-next{float:right}` and `.nav-previous{float:left}`, and the site's last
+surviving state agrees: the Feb 2015 homepage keeps `Siguiente posts »` (forward)
+in `nav-next`. So forward is on the right, back on the left. Two places got this
+wrong:
+
+- The generated back-link was labelled `Older posts` while pointing at page N-1,
+  which holds *newer* posts, and sat in the div meaning the opposite direction.
+  Now `« Anterior`.
+- The captured `/page/2/` has both divs swapped — `« Siguiente` (forward, page 3)
+  in the left-floating `nav-previous`, `Anterior »` (back, page 1) in the
+  right-floating `nav-next` — so a visitor read "Siguiente" on the left and
+  "Anterior" on the right. `repair_nav_inversion()` in `06_rewrite.py` moves each
+  link into the div its own label implies, keyed on the label and never on the
+  href, so it cannot change a destination. It fires only on a pair whose labels
+  prove the inversion, so the 1,053 post pages whose `nav-previous`/`nav-next`
+  divs hold post titles are untouched. Two blocks repaired, both on `/page/2/`.
+
 ### Phase 9 · Provenance
 Because this is an archival site, it must be honest about what it is:
 
@@ -445,7 +492,11 @@ The build fails loudly rather than shipping a broken archive:
    length predictions.
 6. **No-live-domain gate** — zero references to the live `negativeyouth.net`
    anywhere in `site/`.
-7. **Block-balance gate** — every generated listing entry has balanced
+7. **Sidebar-scope gate** — the region from `<div id="content">` to the
+   `<!-- #content` comment is net-zero divs, and the closing markup is
+   byte-identical to the template's. Otherwise `#primary`/`#secondary` end up
+   inside the zero-width `#container` float and the three columns collapse.
+8. **Block-balance gate** — every generated listing entry has balanced
    `div`/`table`/`tr`/`td`/`ul`/`ol`/`blockquote` tags, and a parser walk of
    every generated listing finds no post entry nested inside another and none
    left open. An unclosed block tag silently swallows the posts after it, which
