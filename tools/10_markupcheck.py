@@ -157,11 +157,91 @@ def content_balance(path):
     return (len(re.findall(r'<div\b', seg)) - len(re.findall(r'</div>', seg)),
             closing_sequence(src))
 
+# The theme floats .nav-next right and .nav-previous left, so a link's own label
+# has to agree with the div it sits in and with the side the arrow points to.
+# Post pages also carry nav-previous/nav-next divs, but those hold post titles,
+# so only the words the theme used for pagination are judged here.
+NAV_BLOCK = re.compile(
+    r'<div id="nav-(?:above|below)" class="navigation">(.*?)\n\s*</div>', re.S)
+NAV_DIV = re.compile(r'<div class="nav-(previous|next)">\s*(<a\b[^>]*>.*?</a>)',
+                     re.S)
+NAV_ARROW = re.compile(r"&laquo;|&raquo;|&#171;|&#187;|«|»", re.I)
+NAV_SPAN = re.compile(
+    r"<span[^>]*class=[\"']meta-nav[\"'][^>]*>.*?</span>", re.S)
+NAV_LABEL = re.compile(r"^(Siguiente|Older posts)", re.I)
+NAV_BACK = re.compile(r"^(Anterior|Newer posts)", re.I)
+
+
+def nav_faults(path):
+    """
+    Pagination links whose label, div or arrow disagree with each other.
+
+    Getting this right took three passes, each caught in the browser rather than
+    in a diff:
+
+    1. the captured `/page/2/` had both divs swapped, so `Siguiente` rendered on
+       the left and `Anterior` on the right;
+    2. fixing the classes left the arrow glyphs still pointing the wrong way -
+       `« Siguiente` on the right, `Anterior »` on the left;
+    3. fixing that left the divs in the wrong order - `nav-next` before
+       `nav-previous`.
+
+    The canonical form, which every untouched capture agrees on
+    (`/category/musica/page/2/` and `/category/video/page/2/` are identical in
+    shape), is `nav-previous` first with a leading `«`, then `nav-next` with a
+    trailing `»`.
+    """
+    src = open(path, encoding='utf-8', errors='replace').read()
+    faults = []
+    for blk in NAV_BLOCK.finditer(src):
+        divs = list(NAV_DIV.finditer(blk.group(1)))
+        labelled = []
+        for cls, anchor in ((d.group(1), d.group(2)) for d in divs):
+            text = NAV_ARROW.sub(" ", re.sub(r"<[^>]*>", " ", anchor)).strip()
+            if NAV_LABEL.match(text):
+                labelled.append(("next", cls, anchor))
+            elif NAV_BACK.match(text):
+                labelled.append(("previous", cls, anchor))
+        if len(labelled) != 2:
+            continue          # one direction only, or not pagination at all
+        fwd = next(d for d in labelled if d[0] == "next")
+        back = next(d for d in labelled if d[0] == "previous")
+
+        if fwd[1] != "next":
+            faults.append(f"'{re.sub(r'<[^>]*>', '', fwd[2]).strip()}' says "
+                          f"forward but sits in nav-{fwd[1]} (floats left)")
+        if back[1] != "previous":
+            faults.append(f"'{re.sub(r'<[^>]*>', '', back[2]).strip()}' says "
+                          f"back but sits in nav-{back[1]} (floats right)")
+        if back[1] == "previous" and fwd[1] == "next":
+            if divs.index(next(d for d in divs if d.group(1) == "previous")) > \
+               divs.index(next(d for d in divs if d.group(1) == "next")):
+                faults.append("nav-next precedes nav-previous; the theme emits "
+                              "nav-previous first")
+        for cls, anchor, want_lead in (("previous", back[2], True),
+                                       ("next", fwd[2], False)):
+            body = anchor[re.match(r"<a\b[^>]*>", anchor).end():-len("</a>")]
+            arrow_m = NAV_SPAN.search(body)
+            if not arrow_m:
+                continue          # no arrow glyph: nothing to judge
+            # The arrow leads if no word character precedes it. Comparing
+            # offsets against the midpoint of the string does not work: it can
+            # cut `&laquo;` in half and miss an arrow that is right there.
+            before = body[:arrow_m.start()]
+            leads = not re.search(r"[0-9A-Za-zÀ-ɏ]", before)
+            if leads != want_lead:
+                faults.append(
+                    f"the {'«' if want_lead else '»'} arrow is on the wrong end "
+                    f"of the nav-{cls} link")
+    return faults
+
+
 def main():
     files = sorted(glob.glob('site/**/index.html', recursive=True))
     checked = tot_o = tot_c = nested = unclosed_at_end = open_tables = 0
     problems = []
     balance_problems = []
+    nav_problems = []
     if not load_template_close():
         print("could not read the template's closing structure", file=sys.stderr)
         return 1
@@ -195,6 +275,9 @@ def main():
                 (f, f"closing structure differs from the template:\n"
                     f"        want: {TEMPLATE_CLOSE}\n"
                     f"        got : {close}"))
+
+        for why in nav_faults(f):
+            nav_problems.append((f, why))
     print(f"generated listing pages checked : {checked}")
     print(f"post entries opened              : {tot_o}")
     print(f"entries closed at `<!-- .post -->`: {tot_c}")
@@ -208,11 +291,15 @@ def main():
         print(f"\n#content balance / sidebar placement problems "
               f"({len(balance_problems)}):")
         for pr in balance_problems[:20]: print("  ", pr)
-    if problems or balance_problems:
+    if nav_problems:
+        print(f"\npagination label / div / arrow faults ({len(nav_problems)}):")
+        for pr in nav_problems[:20]: print("  ", pr)
+    if problems or balance_problems or nav_problems:
         return 1
     print("\nOK: every post entry is a sibling, none nested, none left open, "
           "no table left unclosed,")
-    print("    and #content balances with the sidebars outside #container.")
+    print("    #content balances with the sidebars outside #container,")
+    print("    and every pagination link's label, div and arrow agree.")
     return 0
 
 sys.exit(main())

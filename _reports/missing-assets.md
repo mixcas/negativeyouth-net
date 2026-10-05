@@ -1,8 +1,8 @@
 # Phase 6 - Missing assets
 
 Every same-origin reference in every downloaded page and stylesheet was
-resolved against the archive. **6797** distinct local
-paths are referenced. Of those, **3318** were never
+resolved against the archive. **6798** distinct local
+paths are referenced. Of those, **3319** were never
 recovered by any crawler.
 
 Per the locked decision, a missing asset keeps its original reference
@@ -22,7 +22,7 @@ loading someone else's page.
 
 | Kind | Count |
 |---|---:|
-| unknown | 3318 |
+| unknown | 3319 |
 
 ## Every unresolved reference
 
@@ -1089,7 +1089,6 @@ loading someone else's page.
 | `/snow-crash/trackback/` |
 | `/so-close-to-paradise-physical-theraphy-remix/trackback/` |
 | `/soda/trackback/` |
-| `/soft-metals-tell-me/` |
 | `/soft-metals-voices/trackback/` |
 | `/soft-metals/trackback/` |
 | `/soft/trackback/` |
@@ -1413,6 +1412,7 @@ loading someone else's page.
 | `/tag/cover/` |
 | `/tag/coyote-gang/` |
 | `/tag/cozy/` |
+| `/tag/crackboy/feed/` |
 | `/tag/crackwood/` |
 | `/tag/craxxxmurf` |
 | `/tag/craxxxmurf/` |
@@ -2438,6 +2438,7 @@ loading someone else's page.
 | `/tag/tropic-of-cancer/` |
 | `/tag/true-panther-records/` |
 | `/tag/true-panther/` |
+| `/tag/true-parameters/feed/` |
 | `/tag/trust` |
 | `/tag/trust/` |
 | `/tag/tryo/` |

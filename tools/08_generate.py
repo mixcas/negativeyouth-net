@@ -386,7 +386,7 @@ def nav_html(base_path, page, total_pages):
         nxt = f"{base_path}page/{page + 1}/"
         nxt = _r6.local_path(nxt, "homepage")
         nxt = LOCALMAP.get(nxt, nxt)
-        out.append(f'<div class="nav-next"><a href="{nxt}" >Siguiente posts '
+        out.append(f'<div class="nav-next"><a href="{nxt}" >Siguiente '
                    f'<span class="meta-nav">&raquo;</span></a></div>')
     if not out:
         return ""

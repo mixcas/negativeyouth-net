@@ -1,8 +1,8 @@
 # Phase 6b - Internal link check
 
 Every same-origin reference in all **2,843** pages of `site/` was
-resolved against the output tree: **2,908,071** references checked,
-**32,217** unresolved.
+resolved against the output tree: **2,907,212** references checked,
+**31,821** unresolved.
 
 Almost none of this is a defect. The archive never crawled the vast
 majority of the site's generated views, and it never stored a single byte
@@ -10,15 +10,15 @@ of audio or video. The categories below make that concrete.
 
 | Category | Unresolved refs | Distinct targets | Why |
 |---|---:|---:|---|
-| uncaptured post (sidebar widget) | 18,736 | 38 |  |
+| uncaptured post (sidebar widget) | 18,681 | 12 |  |
 | WordPress PHP endpoint | 5,785 | 2 | cannot execute on static hosting |
-| date archive | 2,683 | 5 | month archive beyond 2013-06 was never captured |
-| tag page | 1,767 | 329 | only 143 of ~1,500 tags were captured by any crawler |
+| date archive | 2,664 | 2 | month archive beyond 2013-06 was never captured |
+| tag page | 1,769 | 331 | only 143 of ~1,500 tags were captured by any crawler |
 | trackback endpoint | 947 | 947 | XML-RPC pingback; was PHP, never captured |
 | other | 691 | 162 |  |
-| missing asset | 614 | 76 | thumbnail or file the archive never stored |
 | Tumblr-era page | 514 | 106 | pre-WordPress URL, only a handful captured |
 | audio / flash | 311 | 50 | NO media was ever archived by anyone |
+| missing asset | 290 | 33 | thumbnail or file the archive never stored |
 | author page | 115 | 19 | same: most author pages were never crawled |
 | attachment or feed page | 28 | 7 | WordPress auto-generated view |
 | category page | 20 | 17 | same: most category pages were never crawled |

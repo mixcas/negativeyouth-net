@@ -26,6 +26,34 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, "_cache")
+
+# --------------------------------------------------------------------------
+# Capture overrides
+# --------------------------------------------------------------------------
+# The manifest normally picks, per URL, the largest HTTP-200 payload from the
+# content era. That is the right default for "the most complete rendering of
+# this post", but it is the wrong choice for a handful of pages where a later
+# capture is the better representative, and the site owner has said so.
+#
+# `/about/` is the case in hand. The 2013-06-21 capture the heuristic picks is
+# 144 KB, of which 128 KB is sidebar widget markup; the 2014-03-17 capture is
+# 31 KB with a 14 KB sidebar. The page's own content is the same either way
+# (88% similar; the differences are the share-button widget, which the theme
+# re-rendered between the two dates). The leaner capture is the one the site
+# was actually serving at the end, so it is pinned here.
+#
+# Keyed by dedupe_key(), so write the path in whatever spelling is clearest.
+# Values are Wayback timestamps. Anything listed here is still verified against
+# its CDX digest by 05_verify.py like every other capture - an override changes
+# *which* capture is used, never whether it is checked.
+CAPTURE_OVERRIDES = {
+    "/about/": "20140317064132",
+}
+
+
+def capture_override(url):
+    """Wayback timestamp pinned for this URL by the site owner, else None."""
+    return CAPTURE_OVERRIDES.get(dedupe_key(url))
 WORK = os.path.join(ROOT, "_work")
 REPORTS = os.path.join(ROOT, "_reports")
 PROVENANCE = os.path.join(ROOT, "_provenance")

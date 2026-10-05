@@ -52,6 +52,7 @@ def main():
     # complete rendering), then the earliest such capture for stability.
     chosen = {}
     stats = collections.Counter()
+    overridden = []
 
     for url, caps in by_url.items():
         era = [c for c in caps if C.in_content_era(c.get("timestamp", ""))]
@@ -80,12 +81,33 @@ def main():
 
         best = sorted(pool, key=lambda c: (-length(c), c["timestamp"]))[0]
         rec = dict(best)
+
+        # A pinned capture wins over the largest-payload default. See
+        # common.CAPTURE_OVERRIDES for why `/about/` is one.
+        pinned = C.capture_override(url)
+        if pinned:
+            hit = next((c for c in pool if c["timestamp"] == pinned), None)
+            if hit is None:
+                hit = next((c for c in caps if c["timestamp"] == pinned), None)
+            if hit is not None:
+                if hit is not best:
+                    overridden.append(url)
+                rec = dict(hit)
+            else:
+                print(f"  WARNING: override {pinned} for {url} not in the CDX "
+                      f"index; keeping the default {best['timestamp']}",
+                      file=sys.stderr)
+
         rec["captures"] = len(caps)
         rec["years"] = sorted({C.year_of(c["timestamp"]) for c in caps if c.get("timestamp")})
         rec["urls"] = sorted({C.canonical(c["original"]) for c in caps if c.get("original")})
         chosen[url] = rec
 
     print(f"  resources with a usable capture: {len(chosen)}")
+    if overridden:
+        print(f"  site-owner capture overrides applied: {len(overridden)}")
+        for u in sorted(overridden):
+            print(f"    {u} -> {C.capture_override(u)}")
     for k in ("in_era", "era_only_excluded", "no_200", "no_era_200"):
         print(f"    {k:20s} {stats[k]}")
 

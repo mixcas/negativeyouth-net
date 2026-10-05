@@ -145,6 +145,16 @@ what it is.
    archive's own prev/next navigation but have no capture anywhere. Verified
    directly against the archive, not merely absent from the index.
 
+10. **Non-post assets are now all but recovered.** The first fetch pass left 77
+    resources with no bytes: 46 thumbnails and 27 comment feeds. A later,
+    longer run of `04_fetch.py` recovered all but three of them — `fetch_one()`
+    walks *every* capture the CDX lists for a URL, so a resource marked missing
+    on the first pass can still be found on a later attempt. Remaining: four,
+    of which two are PHP endpoints that cannot execute on static hosting at all
+    (`/xmlrpc.php`, `jquery-archive-list-widget/…/list.js.php`) and two comment
+    feeds. Recorded here because the earlier "77 permanently lost" figure in
+    §2 predates that recovery.
+
 10. **27 comment feeds are indexed but unplayable.** They have a 200 record in
     the CDX index with no retrievable payload. Every capture was tried. All 27
     belong to posts whose HTML *is* captured, so no post text is lost.
@@ -477,6 +487,54 @@ Everything except the final deploy is host-agnostic — build once, measure, the
 deploy.
 
 ---
+
+### Deviations from the capture, and why
+
+Three places where the output deliberately differs from the bytes the archive
+returned. All three are recorded because each one looks like a fidelity bug to
+anyone reading the diff later.
+
+1. **Captured pages are never overwritten** (`08_generate.py`, `paginate()`).
+   38 pages that the archive holds — `/page/2/`, `/category/musica/page/2/` and
+   35 more — are left exactly as captured. The site changed its own markup over
+   time: the captured `/page/2/` (Nov 2013) uses `<div id="wrapper"
+   class="hfeed">`, `<h6 class="entry-title">` and a 705px baseline table with no
+   `.entry-meta`, while the Feb 2015 homepage uses a bare `class="hfeed"`,
+   `<h3>` and a 680px table. Both are authentic. The captured one is evidence.
+
+2. **The generated homepage does not match the Feb 2015 homepage byte-for-byte**,
+   even though it once did. That capture is missing the `</div>` that closes
+   `#content`, which is why the original site's last state rendered with its
+   sidebars collapsed below the content. Matching it exactly reproduced the
+   breakage; matching the 2013 captures restores the working layout. The broken
+   original is preserved in `_provenance/index.html`.
+
+3. **`#respond` fragments are stripped** (`06_rewrite.py`,
+   `strip_respond_fragment()`), at the site owner's request. `#respond` is
+   WordPress's comment anchor and the theme points at it from three places on a
+   post page; the target is a PHP form that cannot execute here, so all 6,851
+   such links led nowhere. Only the fragment is removed, never the link, so
+   `/post/index.html#respond` becomes `/post/index.html` and still resolves.
+   Deliberately **kept**: the `id="respond"` attribute on the form itself, and
+   the 92 `</div><!-- #respond -->` comments, which are the theme's closing
+   markers in the same family as `<!-- #content -->` and `<!-- #container -->`
+   and are invisible when rendered.
+
+### Capture overrides
+
+The manifest picks, per URL, the largest HTTP-200 payload from the content era.
+That is right for "the most complete rendering of this post" and wrong for a
+handful of pages where a later capture is the better representative.
+`common.CAPTURE_OVERRIDES` pins those, keyed by `dedupe_key()`:
+
+- `/about/` -> `20140317064132`. The default pick (2013-06-21) is 145 KB of which
+  128 KB is sidebar widget markup; the pinned capture is 30 KB with a 14 KB
+  sidebar. The page's own content is the same either way — 88% similar, the
+  differences being the share-button widget the theme re-rendered between the
+  two dates. The leaner capture is what the site was serving at the end.
+
+An override changes *which* capture is used, never whether it is verified: the
+pinned row goes through the same CDX digest check as everything else.
 
 ## 6. Verification gates
 

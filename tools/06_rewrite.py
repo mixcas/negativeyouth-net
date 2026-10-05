@@ -155,6 +155,9 @@ DATA_ATTR_RE = re.compile(
 # theme itself. Reported, never applied silently.
 NAV_REPAIRED = []
 
+# `#respond` comment anchors removed, split by whether the link had a path.
+RESPOND_STRIPPED = {"bare": 0, "path": 0}
+
 
 class Rewriter:
     def __init__(self, mapping):
@@ -262,6 +265,7 @@ class Rewriter:
         text = self.embedded_css(text)
         text = self.repair_malformed(text)
         text = self.repair_nav_inversion(text)
+        text = self.strip_respond_fragment(text)
         text = self.prose_url(text)
         return text
 
@@ -353,6 +357,27 @@ class Rewriter:
         here, so the hrefs are left completely alone - this corrects placement,
         never destination. An empty div is left as it is, since WordPress emits
         one whenever only one direction exists.
+
+        The block is rebuilt into the theme's canonical order, which is what every
+        correct capture has (`/category/musica/page/2/` and
+        `/category/video/page/2/` are the reference, both byte-identical in
+        shape):
+
+            <div id="nav-below" class="navigation">
+                <div class="nav-previous"><a ...><span ...>&laquo;</span> Anterior</a></div>
+                <div class="nav-next"><a ...>Siguiente <span ...>&raquo;</span></a></div>
+            </div>
+
+        That means three things, not one: the divs are reordered so
+        `nav-previous` comes first, and the arrow glyph is re-hung to match the
+        side - `«` belongs to the link that floats left, `»` to the one that
+        floats right. The captured page had `« Siguiente` on the right and
+        `Anterior »` on the left: correct divs, but the arrows still pointed the
+        wrong way after the first repair, which swaps classes only.
+
+        Only the label text and the arrow are touched. Each anchor's opening tag
+        is copied verbatim, so the href and any other attribute are preserved
+        byte-for-byte, and the whitespace between the two divs is kept as found.
         """
         block = re.compile(
             r'(<div id="nav-(?:above|below)" class="navigation">)(.*?)(\n\s*</div>)',
@@ -360,20 +385,43 @@ class Rewriter:
         div = re.compile(r'<div class="nav-(previous|next)">\s*(<a\b.*?</a>)\s*</div>',
                          re.S)
 
+        def direction(mm):
+            label = self._ARROWS.sub(" ", re.sub(r"<[^>]*>", " ", mm.group(2)))
+            label = label.strip()
+            if self._FWD.match(label):
+                return "next"
+            if self._BACK.match(label):
+                return "previous"
+            return None
+
+        def canonical(anchor, want):
+            """
+            Re-hang the arrow so it points the way the link will sit.
+
+            The opening tag is copied untouched - that is where the href lives -
+            and only the arrow span and the label around it are rebuilt.
+            """
+            open_m = re.match(r"<a\b[^>]*>", anchor)
+            if not open_m:
+                return anchor
+            head = open_m.group(0)
+            label = anchor[len(head):-len("</a>")]
+            label = re.sub(r"<span[^>]*class=[\"']meta-nav[\"'][^>]*>.*?</span>",
+                           " ", label, flags=re.S)
+            label = re.sub(r"\s+", " ", self._ARROWS.sub(" ", label)).strip()
+            if want == "previous":
+                # floats left: the arrow leads, pointing back the way you came
+                body = f'<span class="meta-nav">&laquo;</span> {label}'
+            else:
+                # floats right: the arrow trails, pointing onward
+                body = f'{label} <span class="meta-nav">&raquo;</span>'
+            return f"{head}{body}</a>"
+
         def swap(m):
             open_tag, inner, close = m.groups()
             divs = list(div.finditer(inner))
             if len(divs) != 2:
                 return m.group(0)
-
-            def direction(mm):
-                label = self._ARROWS.sub(" ", re.sub(r"<[^>]*>", " ", mm.group(2)))
-                label = label.strip()
-                if self._FWD.match(label):
-                    return "next"
-                if self._BACK.match(label):
-                    return "previous"
-                return None
 
             # `got` is keyed by the direction the label *states*, so a complete
             # pair means one link claims forward and the other claims back.
@@ -381,26 +429,65 @@ class Rewriter:
             if got.get("next") is None or got.get("previous") is None:
                 return m.group(0)      # not a direction pair we recognise
             fwd, back = got["next"], got["previous"]
-            if fwd.group(1) == "next" and back.group(1) == "previous":
-                return m.group(0)      # already correct
+            first, second = divs
+            already = (fwd.group(1) == "next" and back.group(1) == "previous"
+                       and back.start() < fwd.start())
+            if already:
+                return m.group(0)      # classes and order already canonical
 
             NAV_REPAIRED.append(open_tag)
-            # Rebuild both divs in one pass against the original offsets: `next`
-            # and `previous` differ in length, so a second substitution would be
-            # applied at stale positions.
-            # Keep document order: whichever div came first in the source must stay
-            # first, only its class changes.
-            ordered = sorted(((fwd, "nav-next"), (back, "nav-previous")),
-                             key=lambda pair: pair[0].start())
-            out, cursor = [], 0
-            for mm, cls in ordered:
-                out.append(inner[cursor:mm.start()])          # whitespace between
-                out.append(f'<div class="{cls}">{mm.group(2)}</div>')
-                cursor = mm.end()
-            out.append(inner[cursor:])
-            return open_tag + "".join(out) + close
+            prev_div = (f'<div class="nav-previous">'
+                        f'{canonical(back.group(2), "previous")}</div>')
+            next_div = (f'<div class="nav-next">'
+                        f'{canonical(fwd.group(2), "next")}</div>')
+            # Keep the leading whitespace and whatever separated the two divs, so
+            # the block keeps the theme's own indentation.
+            return (open_tag + inner[:first.start()] + prev_div
+                    + inner[first.end():second.start()] + next_div
+                    + inner[second.end():] + close)
 
         return block.sub(swap, text)
+
+    def strip_respond_fragment(self, text):
+        """
+        Remove the `#respond` fragment from every link, per the site owner.
+
+        `#respond` is WordPress's comment anchor. The theme points at it from
+        three places on a post page:
+
+            <div class="comentarios"><a href="/post/index.html#respond">Sin
+                Comentarios! »</a></div>        "N comments!"
+            <a class="comment-link" href="#respond">Post a comment</a>
+            <a id="cancel-comment-reply-link" href="/post/index.html#respond">
+                Cancelar respuesta</a>
+
+        None of them can work here. The target is the comment form, which is PHP
+        and cannot execute on static hosting, so every one of the 6,943 links
+        across 2,710 pages led to a form that was never going to submit.
+
+        Only the fragment is removed, never the link. `/post/index.html#respond`
+        becomes `/post/index.html`, which still resolves - dropping the whole
+        anchor would delete visible text the theme wrote.
+
+        The `id="respond"` attribute on the form itself is left alone. It is not a
+        reference to it, it is the target, and removing it would be an edit to the
+        captured markup that nothing asks for.
+        """
+        bare = re.compile(r'(?P<attr>\bhref\s*=\s*)(?P<q>["\'])#respond(?P=q)')
+        pathy = re.compile(r'(?P<pre>href\s*=\s*["\'][^"\'#]*?)#respond(?P<q>["\'])')
+
+        def to_bare(m):
+            RESPOND_STRIPPED["bare"] += 1
+            # The pattern consumed both quotes, so both have to go back:
+            # emitting only the opening one leaves a dangling `href="`.
+            return m.group("attr") + m.group("q") + m.group("q")
+
+        def to_path(m):
+            RESPOND_STRIPPED["path"] += 1
+            return m.group("pre") + m.group("q")
+
+        text = bare.sub(to_bare, text)
+        return pathy.sub(to_path, text)
 
     def repair_malformed(self, text):
         """
