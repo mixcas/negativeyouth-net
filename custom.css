@@ -54,3 +54,12 @@ a {
 	display: none;
 }
  */
+
+.comentarios,
+.really_simple_share,
+#respond,
+.published,
+.entry-content > hr,
+.entry-meta {
+  display: none;
+}
