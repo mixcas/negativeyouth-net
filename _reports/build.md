@@ -1,6 +1,6 @@
 # Phase 8 - Build report
 
-Measured 05 October 2026.
+Measured 06 October 2026.
 
 ## Size
 
@@ -8,7 +8,7 @@ Measured 05 October 2026.
 |---|---:|
 | Files | **5,222** |
 | Directories | 3,768 |
-| Total size | **615.8 MB** |
+| Total size | **615.9 MB** |
 | HTML pages | 2,844 |
 | Largest file | 3.66 MB |
 
@@ -16,7 +16,7 @@ Measured 05 October 2026.
 
 | Type | Files | Size |
 |---|---:|---:|
-| .html | 2,844 | 405.49 MB |
+| .html | 2,844 | 405.50 MB |
 | .jpg | 1,027 | 136.76 MB |
 | .xml | 849 | 0.80 MB |
 | .png | 334 | 40.34 MB |

@@ -155,6 +155,22 @@ DATA_ATTR_RE = re.compile(
 # theme itself. Reported, never applied silently.
 NAV_REPAIRED = []
 
+# `http://` embed URLs upgraded to `https://`, counted per registrable domain.
+UPGRADED = collections.Counter()
+
+# Hosts whose embeds the site owner asked to upgrade to HTTPS. HTTPS pages
+# block `http://` subresources, so every player and hotlinked file below would
+# otherwise render as a dead box on the live site. All of these serve the same
+# bytes over HTTPS.
+EMBED_HOSTS = (
+    "youtube.com",
+    "youtube-nocookie.com",
+    "youtu.be",
+    "vimeo.com",
+    "soundcloud.com",
+    "bandcamp.com",
+)
+
 # `#respond` comment anchors removed, split by whether the link had a path.
 RESPOND_STRIPPED = {"bare": 0, "path": 0}
 
@@ -265,6 +281,7 @@ class Rewriter:
         text = self.embedded_css(text)
         text = self.repair_malformed(text)
         text = self.repair_nav_inversion(text)
+        text = self.upgrade_embed_scheme(text)
         text = self.strip_respond_fragment(text)
         text = self.prose_url(text)
         return text
@@ -489,6 +506,58 @@ class Rewriter:
         text = bare.sub(to_bare, text)
         return pathy.sub(to_path, text)
 
+    def upgrade_embed_scheme(self, text):
+        """
+        Rewrite `http://` to `https://` on media-embed URLs, per the site owner.
+
+        An HTTPS page blocks `http://` subresources, so the theme's players -
+        YouTube and Vimeo iframes, the old SoundCloud Flash objects, Bandcamp
+        iframes - would all render as dead boxes on the live site. The upgrade
+        is strictly a scheme swap: the host, path and query are untouched, and
+        every host listed serves identical bytes over HTTPS.
+
+        Only embedded content is touched: `src` on iframe/embed/object/audio/
+        video/source/img/script, `data` on object, `_mce_src` (a TinyMCE
+        leftover mirroring `src`), and `value` on param. Deliberately excluded:
+
+        - `<a href>` hyperlinks (8,004 of them). Top-level navigation is never
+          blocked, so there is nothing to fix and no reason to rewrite history.
+        - post prose and link text (`0. TOTAL LOSS 1. http://www.youtube.com/
+          watch?...`). That is visible text the author wrote, not an embed.
+        - feeds, which stay verbatim by a locked decision, and stylesheets,
+          which never reference these hosts. This runs inside `html()` only.
+        """
+        hosts = "|".join(h.replace(".", r"\.") for h in EMBED_HOSTS)
+        pat = re.compile(
+            r"(?P<open><(?:iframe|embed|object|audio|video|source|img|script)"
+            r"\b[^<>]*?(?:src|data|_mce_src)\s*=\s*[\"']?)"
+            r"http://"
+            r"(?P<host>(?:[\w-]+\.)*(?:" + hosts + r"))"
+            r"(?P<rest>\b[^\"'<>]*)",
+            re.I)
+
+        def swap(m):
+            UPGRADED[m.group("host").lower()] += 1
+            return (m.group("open") + "https://"
+                    + m.group("host") + m.group("rest"))
+
+        # One match per tag per pass: `<embed _mce_src="http://…" src="http://…">`
+        # carries two, and the second sits behind the first match's end. Each
+        # pass strictly reduces the remaining count, so this terminates.
+        for _ in range(5):
+            new = pat.sub(swap, text)
+            if new == text:
+                break
+            text = new
+
+        param = re.compile(
+            r"(?P<open><param\b[^<>]*?value\s*=\s*[\"']?)"
+            r"http://"
+            r"(?P<host>(?:[\w-]+\.)*(?:" + hosts + r"))"
+            r"(?P<rest>\b[^\"'<>]*)",
+            re.I)
+        return param.sub(swap, text)
+
     def repair_malformed(self, text):
         """
         Fix `http://http://host/...`, which some posts contain as literal text.
@@ -704,6 +773,11 @@ def main():
                 live_refs += 1
     print(f"  purity: web-static.archive.org references = {live_refs} (must be 0)")
     print(f"  feed files left verbatim (canonical URLs preserved)")
+    if sum(UPGRADED.values()):
+        print(f"  embed scheme upgraded to https: {sum(UPGRADED.values())} URLs "
+              f"(https pages block http subresources)")
+        for host, n in UPGRADED.most_common():
+            print(f"    {host:28s} {n}")
     if NAV_REPAIRED:
         uniq = sorted(set(NAV_REPAIRED))
         print(f"  pagination repaired on {len(uniq)} captured navigation block(s): "

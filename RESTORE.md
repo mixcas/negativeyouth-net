@@ -606,6 +606,14 @@ interruption is always safe.
 - **Why the chain walk matters.** The CDX index is demonstrably incomplete. Trusting
   it alone would silently drop posts while producing an archive that looks complete.
   Three independent sources, reconciled, is the minimum for a defensible result.
+- **Why embeds are https and links are not.** An HTTPS page blocks `http://`
+  subresources, so the theme's players would all have rendered as dead boxes on
+  the live site. `upgrade_embed_scheme()` in `06_rewrite.py` swaps the scheme on
+  six media hosts (YouTube incl. nocookie/`youtu.be`, Vimeo, SoundCloud,
+  Bandcamp) and only inside embed tags - iframe/embed/object/param/audio/video/
+  source/img/script. The 8,004 `<a href>` hyperlinks stay exactly as captured:
+  top-level navigation is never blocked, so there is nothing to fix. Post prose
+  that quotes a URL as text is likewise untouched, as are the feeds.
 - **Why feeds are kept.** They are a second content source (Phase 3) and a primary
   artifact in their own right. They are also the cheapest insurance against a
   future loss — a CSV of every post survives even if the HTML does not.

@@ -1,8 +1,8 @@
 # Phase 6b - Internal link check
 
-Every same-origin reference in all **2,843** pages of `site/` was
-resolved against the output tree: **2,907,212** references checked,
-**31,821** unresolved.
+Every same-origin reference in all **2,844** pages of `site/` was
+resolved against the output tree: **2,908,246** references checked,
+**31,831** unresolved.
 
 Almost none of this is a defect. The archive never crawled the vast
 majority of the site's generated views, and it never stored a single byte
@@ -10,9 +10,9 @@ of audio or video. The categories below make that concrete.
 
 | Category | Unresolved refs | Distinct targets | Why |
 |---|---:|---:|---|
-| uncaptured post (sidebar widget) | 18,681 | 12 |  |
-| WordPress PHP endpoint | 5,785 | 2 | cannot execute on static hosting |
-| date archive | 2,664 | 2 | month archive beyond 2013-06 was never captured |
+| uncaptured post (sidebar widget) | 18,688 | 12 |  |
+| WordPress PHP endpoint | 5,787 | 2 | cannot execute on static hosting |
+| date archive | 2,665 | 2 | month archive beyond 2013-06 was never captured |
 | tag page | 1,769 | 331 | only 143 of ~1,500 tags were captured by any crawler |
 | trackback endpoint | 947 | 947 | XML-RPC pingback; was PHP, never captured |
 | other | 691 | 162 |  |
