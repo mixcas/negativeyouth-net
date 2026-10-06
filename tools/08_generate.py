@@ -486,6 +486,11 @@ def render(content, extra_head=""):
     tail = doc[close:]
     if extra_head:
         head = head.replace("</head>", extra_head + "\n</head>", 1)
+    # The site-owner stylesheet, last in <head> so its rules win ties. Same
+    # link 06_rewrite.py injects into captured pages; the template predates it.
+    if "custom.css" not in head:
+        head = head.replace("</head>",
+                            _r6.Rewriter.CUSTOM_CSS_LINK + "\n</head>", 1)
     return head + "\n" + content + "\n\t\t" + tail
 
 

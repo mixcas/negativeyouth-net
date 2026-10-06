@@ -585,6 +585,14 @@ python3 tools/07_linkcheck.py       # internal link gate
 python3 tools/08_generate.py        # homepage, pagination, missing archives, balance gate
 python3 tools/09_provenance.py      # footers, posts.csv/json, build report  ← REVIEW HERE
 python3 tools/11_404.py             # 404.html for static hosting (after 09)
+
+`custom.css` at the repo root is the hand-editable site-owner stylesheet.
+`06_rewrite.py` copies it into `site/` on every build and links it last in
+every page's `<head>` (captured pages via `inject_custom_css()`, generated
+ones in `render()`), so owner rules win ties without touching the archived
+theme files. Preview CSS-only changes with `cp custom.css site/custom.css` -
+no rebuild needed. Do not edit `site/custom.css` as the permanent copy: it is
+build output and gets overwritten.
 ```
 
 `06_rewrite.py` clears and rebuilds `site/`, so it must finish **before**

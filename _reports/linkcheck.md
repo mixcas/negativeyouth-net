@@ -1,7 +1,7 @@
 # Phase 6b - Internal link check
 
 Every same-origin reference in all **2,844** pages of `site/` was
-resolved against the output tree: **2,908,246** references checked,
+resolved against the output tree: **2,911,090** references checked,
 **31,831** unresolved.
 
 Almost none of this is a defect. The archive never crawled the vast

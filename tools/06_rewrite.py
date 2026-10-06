@@ -155,6 +155,10 @@ DATA_ATTR_RE = re.compile(
 # theme itself. Reported, never applied silently.
 NAV_REPAIRED = []
 
+# Files the build adds that the archive never contained. Excluded from the
+# map/disk reconciliation so the report only flags genuine surprises.
+OWNER_CHROME = {"/custom.css"}
+
 # `http://` embed URLs upgraded to `https://`, counted per registrable domain.
 UPGRADED = collections.Counter()
 
@@ -284,6 +288,7 @@ class Rewriter:
         text = self.upgrade_embed_scheme(text)
         text = self.strip_respond_fragment(text)
         text = self.prose_url(text)
+        text = self.inject_custom_css(text)
         return text
 
     def prose_url(self, text):
@@ -505,6 +510,31 @@ class Rewriter:
 
         text = bare.sub(to_bare, text)
         return pathy.sub(to_path, text)
+
+    CUSTOM_CSS_LINK = ('<link rel="stylesheet" type="text/css" '
+                       'href="/custom.css" />')
+
+    def inject_custom_css(self, text):
+        """
+        Link the site-owner stylesheet into the page, per the site owner.
+
+        `/custom.css` is the hand-editable file at the repo root, copied into
+        `site/` on every build. It is linked here - after every theme and
+        plugin stylesheet the page already carries, just before `</head>` - so
+        that on equal specificity the owner's rules win the cascade. The link
+        goes in even though the file starts out empty: an empty stylesheet
+        changes nothing, and the wiring must already work on the day the first
+        real rule is written.
+
+        Guarded against double injection for safety, though in practice every
+        page is rebuilt from raw capture bytes so it can only ever run once.
+        """
+        if "custom.css" in text:
+            return text
+        if "</head>" not in text:
+            return text
+        return text.replace("</head>",
+                            self.CUSTOM_CSS_LINK + "\n</head>", 1)
 
     def upgrade_embed_scheme(self, text):
         """
@@ -741,6 +771,19 @@ def main():
         written += 1
 
     print(f"  wrote {written} files into site/")
+
+    # The site-owner stylesheet. The repo-root `custom.css` is the source of
+    # truth; this copy is what gets served. Kept as a file copy rather than
+    # generated text so hand edits round-trip byte-for-byte.
+    src = os.path.join(C.ROOT, "custom.css")
+    if os.path.exists(src):
+        with open(src, "rb") as f:
+            write_file("/custom.css", f.read())
+        print(f"  copied custom.css into site/")
+    else:
+        print(f"  WARNING: custom.css missing at repo root; pages will link "
+              f"a stylesheet that does not exist", file=sys.stderr)
+
     if skipped:
         print(f"  {len(skipped)} manifest resources had no cached bytes "
               f"(unrecoverable; their references still rewritten)")
@@ -853,7 +896,11 @@ def main():
             on_disk.add("/" + rel)
     declared = {v["local"] for v in mapping.values()}
     absent = declared - on_disk
-    extra = on_disk - declared
+    # Files the build itself adds on top of the archive: the site-owner
+    # stylesheet (copied from the repo root a few lines above) and siblings
+    # like it. They are supposed to be there; listing them as "unmapped"
+    # would train everyone to ignore the report.
+    extra = on_disk - declared - OWNER_CHROME
     print(f"  map/disk reconciliation: {len(on_disk)} files on disk, "
           f"{len(absent)} mapped-but-absent, {len(extra)} on-disk-but-unmapped")
     if extra:
