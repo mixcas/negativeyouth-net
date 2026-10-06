@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: BEBETUNE$</title>
+	<atom:link href="http://negativeyouth.net/bebetune/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/bebetune/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: #BODYGUARD &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/bebetune/#comment-2830</link>
+		<dc:creator><![CDATA[#BODYGUARD &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Fri, 24 Feb 2012 01:15:19 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=4245#comment-2830</guid>
+		<description><![CDATA[[...] SILICA GEL. Este mixtape es mucho más chill que INHALE C-4 $$$$$, otro mixtape que lanzó como Bebetunes a finales del año pasado, pero igual de [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] SILICA GEL. Este mixtape es mucho más chill que INHALE C-4 $$$$$, otro mixtape que lanzó como Bebetunes a finales del año pasado, pero igual de [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

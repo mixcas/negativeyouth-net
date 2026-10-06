@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: ETERNITY ZONE</title>
+	<atom:link href="http://negativeyouth.net/eternity-zone/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/eternity-zone/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: unpopshopness &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/eternity-zone/#comment-777</link>
+		<dc:creator><![CDATA[unpopshopness &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Mon, 25 Jul 2011 21:02:30 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=862#comment-777</guid>
+		<description><![CDATA[[...] de Eternity Zone, a quien habiamos  entrevistado hace un rato cuando les presentamos la rola de Popshop, ahora nos traen el video de esta [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] de Eternity Zone, a quien habiamos  entrevistado hace un rato cuando les presentamos la rola de Popshop, ahora nos traen el video de esta [...]</p>
+]]></content:encoded>
+	</item>
+	<item>
+		<title>Por: Lalo</title>
+		<link>http://negativeyouth.net/eternity-zone/#comment-6</link>
+		<dc:creator><![CDATA[Lalo]]></dc:creator>
+		<pubDate>Fri, 29 Apr 2011 16:25:07 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=862#comment-6</guid>
+		<description><![CDATA[¡Bien por esa!]]></description>
+		<content:encoded><![CDATA[<p>¡Bien por esa!</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

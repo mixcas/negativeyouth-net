@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: SOLEDAD &#8211; INVISIBLE (VIDEO)</title>
+	<atom:link href="http://negativeyouth.net/soledad-invisible-video/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/soledad-invisible-video/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: Selma Puxi pux</title>
+		<link>http://negativeyouth.net/soledad-invisible-video/#comment-6577</link>
+		<dc:creator><![CDATA[Selma Puxi pux]]></dc:creator>
+		<pubDate>Fri, 27 Jul 2012 18:26:10 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=6343#comment-6577</guid>
+		<description><![CDATA[si que captura el feeling d la banda! Hail Harrison! te queremos]]></description>
+		<content:encoded><![CDATA[<p>si que captura el feeling d la banda! Hail Harrison! te queremos</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

@@ -1,0 +1,484 @@
+/*
+THEME NAME: Sandbox
+THEME URI: http://www.plaintxt.org/themes/sandbox/
+DESCRIPTION: Rich with powerful and dynamic semantic class selectors, Sandbox is a canvas for CSS artists
+VERSION: 1.6.1
+AUTHOR: <a href="http://andy.wordpress.com/">Andy Skelton</a> &amp; <a href="http://www.plaintxt.org/">Scott Allan Wallick</a>
+AUTHOR URI:
+TAGS: white, microformats, fixed-width, flexible-width, one-column, two-columns, three-columns, four-columns, left-sidebar, right-sidebar
+*/
+
+/* Two-column with sidebar on left from the /examples/ folder  */
+
+/*
+LAYOUT: Three-Column
+DESCRIPTION: Three-column fluid layout with two sidebars on both sides of content
+*/
+
+html{
+	background-color: #000;
+	background-attachment:fixed;
+	background-position:center top;
+	font-weight: normal;
+ 
+}
+
+body{
+	width:1150px;
+	margin-left:auto;
+	margin-right:auto; 
+}
+div{
+/*	border:1px solid gray; */
+}
+
+h1, h2, h3, h4, h5, h6 {
+ font-weight: normal;
+}
+
+div#container {
+	float:left;
+	z-index:2;
+	width:0px;
+
+}
+
+div#content {
+	z-index:1;
+	float:left;
+	background:#000;
+	width:704px;
+	border: 10px solid #000;
+	padding-left:-10px;
+	min-height:420px;
+	margin-left:213px;
+	
+}
+
+div.sidebar {
+		
+	background:#000;	
+	overflow:hidden;
+	width:206px;
+}
+
+div#primary {
+	width:173px;
+	float:left;
+	margin-top:-10px;
+	/*padding: 18px*/
+	border: 18px solid #000;
+}
+
+*html div#primary {
+	
+	left:20px;
+	position:relative;
+}
+
+div#secondary {
+	width:201px;
+	border: 4px solid #000;
+	float:right;
+	margin-top:-8px;
+	/*padding:5px;*/
+
+	
+}
+
+div#footer {
+	clear:left;
+	width:100%;
+}
+
+/*3cb*/
+
+
+@font-face {
+	font-family: 'HelveticaNeueLT57CnRegular';
+	src: url('fonts/helvetica_lt_57_condensed-webfont.eot');
+	src: url('fonts/helvetica_lt_57_condensed-webfont.eot?#iefix') format('eot'),
+	url('fonts/helvetica_lt_57_condensed-webfont.woff') format('woff'),
+	url('fonts/helvetica_lt_57_condensed-webfont.ttf') format('truetype'),
+	url('fonts/helvetica_lt_57_condensed-webfont.svg#webfontGOAYsZyG') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BebasNeueRegular';
+	src: url('fonts/BebasNeue-webfont.ttf') format('truetype'),
+	url('fonts/BebasNeue-webfont.svg#webfontMfqojxj5') format('svg');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HelveticaNeueLT37ThinCnRegula';
+	src: url('fonts/helvetica_lt_37_thin_condensed-webfont.eot');
+	src: url('fonts/helvetica_lt_37_thin_condensed-webfont.eot?#iefix') format('eot'),
+	url('fonts/helvetica_lt_37_thin_condensed-webfont.woff') format('woff'),
+	url('fonts/helvetica_lt_37_thin_condensed-webfont.ttf') format('truetype'),
+	url('fonts/helvetica_lt_37_thin_condensed-webfont.svg#webfontq99kKaVW') format('svg');
+	font-weight: normal;
+	font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'HelveticaNeueLT47LightCnRegul';
+    src: url('fonts/helvetica_lt_47_light_condensed-webfont.eot');
+    src: url('fonts/helvetica_lt_47_light_condensed-webfont.eot?#iefix') format('eot'),
+         url('fonts/helvetica_lt_47_light_condensed-webfont.woff') format('woff'),
+         url('fonts/helvetica_lt_47_light_condensed-webfont.ttf') format('truetype'),
+         url('fonts/helvetica_lt_47_light_condensed-webfont.svg#webfontmeyQY3vJ') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HelveticaNeueLT27UltLtCnRegul';
+    src: url('fonts/helvetica_lt_27_ultra_light_condensed-webfont.eot');
+    src: url('fonts/helvetica_lt_27_ultra_light_condensed-webfont.eot?#iefix') format('eot'),
+         url('fonts/helvetica_lt_27_ultra_light_condensed-webfont.woff') format('woff'),
+         url('fonts/helvetica_lt_27_ultra_light_condensed-webfont.ttf') format('truetype'),
+         url('fonts/helvetica_lt_27_ultra_light_condensed-webfont.svg#webfontVIhru5Kc') format('svg');
+    font-weight: normal;
+    font-style: normal;
+	font-stretch: condensed;
+
+}
+
+
+
+/* Just some example content */
+div.skip-link {
+	position:absolute;
+	right:1em;
+	top:1em;
+}
+
+div#menu {
+	background:#000;
+	height:21px;
+	width:931px;
+	color: #FFF;
+	border: 3px solid #000;	
+}
+
+div#menu ul,div#menu ul ul {
+	list-style:none;
+	margin:0;
+	padding-left:5px;
+	min-height: 12em;   
+	display: table-cell;   
+	vertical-align: middle;
+}
+
+div#menu ul a {
+	display:block;
+	margin-right:1em;
+	margin:0;
+	text-decoration:none;
+	font-color: #FFF;
+
+}
+div#menu ul li {
+	display:block;
+	margin-right:1em;
+	margin:.25em 5px;
+	text-decoration:none;
+	font-color: #FFF;
+}
+
+
+
+div#menu ul ul ul a {
+	font-style:italic;	
+
+}
+
+div#menu ul li ul {
+
+	left:-999em;
+	position:absolute;
+}
+
+div#menu ul li:hover ul {
+	left:auto;
+}
+
+.entry-title,.entry-meta {
+	clear:both;
+}
+
+div#container,div#primary {
+	color:#FFF !important;
+	margin-top:-8px;
+	letter-spacing:1px;
+}
+
+form#commentform .form-label {
+	margin:1em 0 0;
+}
+
+form#commentform span.required {
+	background:#fff;
+	color:#c30;
+}
+
+form#commentform,form#commentform p {
+	padding:0;
+}
+
+input#author,input#email,input#url,textarea#comment {
+	padding:0.2em;
+}
+
+div.comments ol li {
+	margin:0 0 3.5em;
+}
+
+textarea#comment {
+	height:13em;
+	margin:0 0 0.5em;
+	overflow:auto;
+	width:66%;
+}
+
+.alignright,img.alignright{
+	float:right;
+	margin:1em 0 0 1em;
+}
+
+.alignleft,img.alignleft{
+	float:left;
+	margin:1em 1em 0 0;
+}
+
+.aligncenter,img.aligncenter{
+	display:block;
+	margin:1em auto;
+	text-align:center;
+}
+
+div.gallery {
+	clear:both;
+	height:180px;
+	margin:1em 0;
+	width:100%;
+}
+
+p.wp-caption-text{
+	font-style:italic;
+}
+
+div.gallery dl{
+	margin:1em auto;
+	overflow:hidden;
+	text-align:center;
+}
+
+div.gallery dl.gallery-columns-1 {
+	width:100%;
+}
+
+div.gallery dl.gallery-columns-2 {
+	width:49%;
+}
+
+div.gallery dl.gallery-columns-3 {
+	width:33%;
+}
+
+div.gallery dl.gallery-columns-4 {
+	width:24%;
+}
+
+div.gallery dl.gallery-columns-5 {
+	width:19%;
+}
+
+div#nav-above {
+	margin-bottom:1em;
+}
+
+div#nav-below {
+	margin-top:1em;
+}
+
+div#nav-images {
+	height:150px;
+	margin:1em 0;
+}
+
+div.navigation {
+	font: 17px BebasNeueRegular, Tahoma, Helvetica, Arial, sans-serif;
+	height:1.25em;	
+}
+
+div.navigation div.nav-next {
+	float:right;
+	text-align:right;
+}
+
+div.sidebar h3 {
+	font-size:1.2em;
+}
+
+div.sidebar input#s {
+	width:7em;
+}
+
+div.sidebar li {
+	list-style:none;
+	margin:0 0 2em;
+}
+
+div.sidebar li form {
+	margin:0.2em 0 0;
+	padding:0;
+}
+
+div.sidebar ul ul {
+	margin:0 0 0 1em;
+}
+
+div.sidebar ul ul li {
+	list-style:disc;
+	margin:0;
+}
+
+div.sidebar ul ul ul {
+	margin:0 0 0 0.5em;
+}
+
+div.sidebar ul ul ul li {
+	list-style:circle;
+}
+
+div#menu ul li,div.gallery dl,div.navigation div.nav-previous {
+	float:left;
+}
+
+div.navigation div.nav-previous{
+	float:left;
+}
+
+div#header{
+	width:1150px;
+	text-align:center;
+	margin-bottom:-17px;
+	padding-top:35px;
+}
+
+div#footer {
+	text-align:center;
+}
+
+input#author,input#email,input#url,div.navigation div {
+	width:50%;
+}
+
+div.gallery *,div.sidebar div,div.sidebar h3,div.sidebar ul {
+	margin:0;
+	padding:0;
+}
+
+
+
+
+a{color:#FFF; text-decoration:none; font-weight: normal;}
+
+a{color:#FFF; text-decoration:none;}
+a:hover {color:#ff5060; font-style:italic;}  
+
+h3{font: 13px  HelveticaNeueLT37ThinCnRegula, Helvetica, Arial, sans-serif;}
+
+.xoxo{
+	list-style-type: none;
+	color:#7f1d19;
+	font: 14px  HelveticaNeueLT37ThinCnRegula, Helvetica, Arial, sans-serif;
+}
+
+.textwidget{
+	color:#FFF;
+	font: 14px  HelveticaNeueLT37ThinCnRegula, Helvetica, Arial, sans-serif;	
+	font-style: normal;
+}
+
+
+
+h3.widgettitle{
+	font: 12px  BebasNeueRegular, Helvetica, Arial, sans-serif;
+}
+
+.tagcloud{
+	color:#FFF;
+	font: 12px  HelveticaNeueLT37ThinCnRegula, Helvetica, Arial, sans-serif;	
+	font-style: normal;
+	/*text-align:center;*/
+	
+}
+
+.entry-title {
+	font: 20px  HelveticaNeueLT27UltLtCnRegul, Helvetica, Arial, sans-serif; letter-spacing:auto;
+	color: #FFF;
+	margin:0;
+	padding:10px;
+	text-transform:uppercase;
+}
+
+.search-form input{
+	margin:-49px 10px 10px 0;
+	width: 150px;
+	float: right;
+	font-style: italic;
+	background-color: transparent;  
+	border-color:#FFF;
+}
+
+.comentarios{margin-top:-4px; }
+
+h3 a {
+	color: #99b5e8;
+}
+
+
+div#primary.sidebar.ul { list-style: circle; } 
+div#primary.sidebar.li { font-size: 200%; } 
+div#primary.sidebar.li span { font-size: 100%}
+
+h3 p, table{color:#FFf !important;}
+
+/*  SHADOWBOX */
+
+#featured-modal{
+  position:absolute;
+  font:bold 30px 'Georgia';
+  color:#FFF;
+  text-align:center;
+}
+#featured-modal a{
+  color:#7f1d19;
+  font:bold 30px 'Georgia';
+  font-style:italic;
+}
+#featured-modal p{
+  letter-spacing: -1px;
+  margin: 0;
+}
+#featured-modal iframe{
+  margin: 30px 0;
+}
+
+div.blockUI a #close-feat{
+  line-height:100px;
+  color:#FFF;
+}
+div.blockUI{position:relative;
+}
+div.blockOverlay, div.blockUI *{
+/*    cursor:pointer; */
+  cursor:url( http://www.w3schools.com/cssref/smiley.gif), auto !important; 
+}

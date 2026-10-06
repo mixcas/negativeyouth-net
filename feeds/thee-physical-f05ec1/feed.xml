@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: THEE PHYSICAL</title>
+	<atom:link href="http://negativeyouth.net/thee-physical/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/thee-physical/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: THEE PHYSICAL REMIXES &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/thee-physical/#comment-2783</link>
+		<dc:creator><![CDATA[THEE PHYSICAL REMIXES &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Wed, 11 Jan 2012 17:30:22 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=1318#comment-2783</guid>
+		<description><![CDATA[[...]  llega a nuestras manos vía Dis Magazine la compilación de remixes de Thee Physical; el último album de Pictureplane. El release está formado por 19 tracks que además [...]]]></description>
+		<content:encoded><![CDATA[<p>[...]  llega a nuestras manos vía Dis Magazine la compilación de remixes de Thee Physical; el último album de Pictureplane. El release está formado por 19 tracks que además [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: SUPERMAD</title>
+	<atom:link href="http://negativeyouth.net/supermad/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/supermad/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: SELMA OXOR &#8211; QUIERO SALIR &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/supermad/#comment-4021</link>
+		<dc:creator><![CDATA[SELMA OXOR &#8211; QUIERO SALIR &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Wed, 23 May 2012 19:10:39 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=2186#comment-4021</guid>
+		<description><![CDATA[[...] en sus presentaciones en vivo, pero en esta versión pimpeada en la producción, Dr. Dude (de Supermad) a.k.a. Humanoid mutations lleva su sonido a un nuevo nivel desde su estudio en la Narvarte . [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] en sus presentaciones en vivo, pero en esta versión pimpeada en la producción, Dr. Dude (de Supermad) a.k.a. Humanoid mutations lleva su sonido a un nuevo nivel desde su estudio en la Narvarte . [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

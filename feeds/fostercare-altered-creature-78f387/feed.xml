@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: FOSTERCARE &#8211; ALTERED CREATURE</title>
+	<atom:link href="http://negativeyouth.net/fostercare-altered-creature/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/fostercare-altered-creature/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: FOSTERCARE B-SIDES &#8211; NEGATIVE YOUTH IS DEAD</title>
+		<link>http://negativeyouth.net/fostercare-altered-creature/#comment-8022</link>
+		<dc:creator><![CDATA[FOSTERCARE B-SIDES &#8211; NEGATIVE YOUTH IS DEAD]]></dc:creator>
+		<pubDate>Thu, 13 Jun 2013 20:06:00 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=6123#comment-8022</guid>
+		<description><![CDATA[[...] disco de B-Sides de Fostercare. 12 Tracks que quedaron fuera de sus discos Altered Creature y Sirens &amp; Sleep Vol 1, que saldrá en los próximos meses a través de True [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] disco de B-Sides de Fostercare. 12 Tracks que quedaron fuera de sus discos Altered Creature y Sirens &amp; Sleep Vol 1, que saldrá en los próximos meses a través de True [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

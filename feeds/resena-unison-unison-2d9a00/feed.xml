@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: RESEÑA: UNISON &#8211; UNISON</title>
+	<atom:link href="http://negativeyouth.net/resena-unison-unison/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/resena-unison-unison/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: SPC ECO &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/resena-unison-unison/#comment-2430</link>
+		<dc:creator><![CDATA[SPC ECO &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Thu, 22 Sep 2011 15:05:59 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=2760#comment-2430</guid>
+		<description><![CDATA[[...] semana pasada en la reseña del debut de Unison mencioné a varias bandas con las que según yo tienen más cosas en común que con otras [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] semana pasada en la reseña del debut de Unison mencioné a varias bandas con las que según yo tienen más cosas en común que con otras [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

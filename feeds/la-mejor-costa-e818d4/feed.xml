@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: LA MEJOR COSTA</title>
+	<atom:link href="http://negativeyouth.net/la-mejor-costa/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/la-mejor-costa/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: cas</title>
+		<link>http://negativeyouth.net/la-mejor-costa/#comment-827</link>
+		<dc:creator><![CDATA[cas]]></dc:creator>
+		<pubDate>Wed, 27 Jul 2011 15:43:29 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.tumblr.com/post/2838776573#comment-827</guid>
+		<description><![CDATA[marihuana = bajar de peso
+OJALA!]]></description>
+		<content:encoded><![CDATA[<p>marihuana = bajar de peso<br />
+OJALA!</p>
+]]></content:encoded>
+	</item>
+	<item>
+		<title>Por: Anonimo</title>
+		<link>http://negativeyouth.net/la-mejor-costa/#comment-826</link>
+		<dc:creator><![CDATA[Anonimo]]></dc:creator>
+		<pubDate>Wed, 27 Jul 2011 15:37:01 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.tumblr.com/post/2838776573#comment-826</guid>
+		<description><![CDATA[Cual bajo de peso la causa es q se hizo mariwana]]></description>
+		<content:encoded><![CDATA[<p>Cual bajo de peso la causa es q se hizo mariwana</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

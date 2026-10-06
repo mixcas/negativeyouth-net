@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: BOAN</title>
+	<atom:link href="http://negativeyouth.net/boan/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/boan/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: BOAN &#124; The Gorgeous Daily</title>
+		<link>http://negativeyouth.net/boan/#comment-7996</link>
+		<dc:creator><![CDATA[BOAN &#124; The Gorgeous Daily]]></dc:creator>
+		<pubDate>Sun, 23 Dec 2012 11:32:25 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=8055#comment-7996</guid>
+		<description><![CDATA[[...] Via (Negative Youth) [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] Via (Negative Youth) [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

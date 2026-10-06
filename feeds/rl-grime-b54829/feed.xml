@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: RL GRIME</title>
+	<atom:link href="http://negativeyouth.net/rl-grime/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/rl-grime/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: RL GRIME &#8211; TRAP ON ACID &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/rl-grime/#comment-3903</link>
+		<dc:creator><![CDATA[RL GRIME &#8211; TRAP ON ACID &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Fri, 11 May 2012 20:44:25 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=5419#comment-3903</guid>
+		<description><![CDATA[[...] &#8220;Trap On Acid&#8221;. Si no cachan bien quién es este sujeto pueden darle una checada a la entrada anterior donde hablamos de su último ep titulado [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] &#8220;Trap On Acid&#8221;. Si no cachan bien quién es este sujeto pueden darle una checada a la entrada anterior donde hablamos de su último ep titulado [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

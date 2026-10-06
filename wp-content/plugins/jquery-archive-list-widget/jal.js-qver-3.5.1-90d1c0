@@ -1,0 +1,21 @@
+function jquery_archive_list_animate(clicked_obj){
+                if(jQuery(clicked_obj).siblings('ul').children('li').is(':hidden')){
+                    jQuery(clicked_obj).siblings('ul').children('li').slideDown();
+                    jQuery(clicked_obj).children('.jaw_symbol').html('▼');
+                }
+                else
+                {
+                    jQuery(clicked_obj).children('.jaw_symbol').html('►');
+                    jQuery(clicked_obj).siblings('ul').children('li').slideUp();
+                }
+                jQuery(clicked_obj).parent().toggleClass('expanded');
+            }
+
+            jQuery(document).ready(function() {
+                jQuery('li.jaw_years a.jaw_years, li.jaw_months a.jaw_months').on('click', function(e){
+                    if(jQuery(this).siblings('ul').children('li').length)
+                        e.preventDefault();
+
+                    jquery_archive_list_animate(this);
+                });
+            });

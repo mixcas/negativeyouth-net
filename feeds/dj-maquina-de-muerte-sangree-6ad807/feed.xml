@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: DJ MAQUINA DE MUERTE &#8211; SANGREE LIVE MIX</title>
+	<atom:link href="http://negativeyouth.net/dj-maquina-de-muerte-sangree/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/dj-maquina-de-muerte-sangree/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: jc</title>
+		<link>http://negativeyouth.net/dj-maquina-de-muerte-sangree/#comment-940</link>
+		<dc:creator><![CDATA[jc]]></dc:creator>
+		<pubDate>Sun, 31 Jul 2011 07:33:55 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=2208#comment-940</guid>
+		<description><![CDATA[PRONTO]]></description>
+		<content:encoded><![CDATA[<p>PRONTO</p>
+]]></content:encoded>
+	</item>
+	<item>
+		<title>Por: Iva X Per(m)</title>
+		<link>http://negativeyouth.net/dj-maquina-de-muerte-sangree/#comment-938</link>
+		<dc:creator><![CDATA[Iva X Per(m)]]></dc:creator>
+		<pubDate>Sun, 31 Jul 2011 07:22:25 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=2208#comment-938</guid>
+		<description><![CDATA[Diantres! Cuando será la proxima!!!???
+Captcha Project: response ojusea]]></description>
+		<content:encoded><![CDATA[<p>Diantres! Cuando será la proxima!!!???<br />
+Captcha Project: response ojusea</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

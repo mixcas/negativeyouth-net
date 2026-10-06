@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: WEEKEND UPDATE III</title>
+	<atom:link href="http://negativeyouth.net/weekend-update-iii/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/weekend-update-iii/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: MEN IN BURKA &#8211; WAR/MAGIC &#8211; NEGATIVE † YOUTH</title>
+		<link>http://negativeyouth.net/weekend-update-iii/#comment-7971</link>
+		<dc:creator><![CDATA[MEN IN BURKA &#8211; WAR/MAGIC &#8211; NEGATIVE † YOUTH]]></dc:creator>
+		<pubDate>Wed, 31 Oct 2012 20:13:03 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=7550#comment-7971</guid>
+		<description><![CDATA[[...] el weekend upate de esta semana les puse el nuevo sencillo de Men in Burka, el proyecto de ethnobass de Kamran Khan [...]]]></description>
+		<content:encoded><![CDATA[<p>[...] el weekend upate de esta semana les puse el nuevo sencillo de Men in Burka, el proyecto de ethnobass de Kamran Khan [...]</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

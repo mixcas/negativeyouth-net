@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: SHADES</title>
+	<atom:link href="http://negativeyouth.net/shades/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/shades/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: Victor Dagon</title>
+		<link>http://negativeyouth.net/shades/#comment-2634</link>
+		<dc:creator><![CDATA[Victor Dagon]]></dc:creator>
+		<pubDate>Tue, 22 Nov 2011 21:22:35 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=4017#comment-2634</guid>
+		<description><![CDATA[Muy sexi todo el despliegue musical y de imágenes.]]></description>
+		<content:encoded><![CDATA[<p>Muy sexi todo el despliegue musical y de imágenes.</p>
+]]></content:encoded>
+	</item>
+	<item>
+		<title>Por: alexandar</title>
+		<link>http://negativeyouth.net/shades/#comment-2623</link>
+		<dc:creator><![CDATA[alexandar]]></dc:creator>
+		<pubDate>Sat, 19 Nov 2011 20:15:25 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=4017#comment-2623</guid>
+		<description><![CDATA[mil veces delfín hasta el fin, él es auténtico]]></description>
+		<content:encoded><![CDATA[<p>mil veces delfín hasta el fin, él es auténtico</p>
+]]></content:encoded>
+	</item>
+	<item>
+		<title>Por: LX</title>
+		<link>http://negativeyouth.net/shades/#comment-2606</link>
+		<dc:creator><![CDATA[LX]]></dc:creator>
+		<pubDate>Wed, 16 Nov 2011 19:58:08 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=4017#comment-2606</guid>
+		<description><![CDATA[padrisimo el video y la rola]]></description>
+		<content:encoded><![CDATA[<p>padrisimo el video y la rola</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

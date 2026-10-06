@@ -1,0 +1,327 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -ms-word-break: hyphenate;
+     word-break: hyphenate;
+
+     // Non standard for webkit
+     word-break: hyphenate;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+}
+
+a {
+  text-decoration: none;
+  font-style:italic;
+  color: #acd4d3;
+    -ms-word-break: break-all;
+     word-break: break-all;
+
+     // Non standard for webkit
+     word-break: break-word;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+}
+
+
+ul, li {
+  list-style-type: none;
+}
+
+/* clearfix */
+
+.cf:before, .cf:after {
+  content: "\0020";
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+
+.cf:after {
+  clear: both;
+}
+
+.cf {
+  zoom: 1;
+}
+
+/* MAIN */
+
+body {
+  width: 100%;
+  background: #030303;
+  padding: 40px 0;
+}
+
+.wrapper {
+  width: 1050px;
+  margin: 0 auto;
+  position: relative;
+}
+
+p {
+  font-family: 'Play', sans-serif;
+}
+
+/* HEADER */
+.header {
+  position: fixed;
+  width: 100%;
+  z-index: 10000;
+}
+
+header h1 {
+  display: block;
+  background: url(_img/header.png) center top no-repeat;
+  width: 100%;
+  height: 114px;
+  overflow: hidden;
+  text-indent: -99999px;
+}
+
+nav ul {
+  display: block;
+  margin-left: 30px;
+  margin-top: -33px;
+}
+
+nav li {
+  display: block;
+  float: left;
+  background: url(_img/sprite.png) no-repeat;
+  height: 33px;
+  overflow: hidden;
+  text-indent: -9999px;
+}
+
+nav li a {
+  display: block;
+  height: 33px;
+}
+
+.home {
+  width: 88px;
+}
+
+.releases {
+  width: 147px;
+  background-position: 0 -35px;
+  margin-left: 30px;
+}
+
+.about {
+  width: 105px;
+  background-position: 0 -70px;
+  margin-left: 26px;
+}
+
+.ask {
+  width: 64px;
+  background-position: 0 -104px;
+  margin-left: 27px;
+}
+
+.social {
+  float: right;
+  margin: 10px 0;
+}
+
+.social li {
+  float: left;
+  display: block;
+  height: 26px;
+  background: url(_img/sprite.png) -1px no-repeat;
+  margin-left: 30px;
+}
+.social li a {
+  display: block;
+  height: 26px;
+  overflow: hidden;
+  text-indent: -99999px;
+}
+
+li.fb {
+  background-position-y: -142px;
+  width: 13px;
+}
+
+li.tw {
+  background-position-y: -174px;
+  width: 31px;
+}
+
+li.sc {
+  background-position-y: -206px;
+  width: 60px;
+}
+
+/* POSTS */
+
+.posts {
+  margin-top: 162px;
+}
+
+.post {
+  margin-bottom: 120px;
+  padding-bottom: 10px;
+}
+/* PHOTO POST */
+
+.photo img {
+  width: 100%;
+}
+
+.photo .caption {
+  display: block;
+  max-width: 40%;
+  position: absolute;
+  bottom: 40px;
+  padding: 1%;
+  background: #030303;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16pt;
+}
+
+/* TEXT POST */
+article:nth-child(1n+1) .video,
+article:nth-child(1n+1) .text,
+article:nth-child(1n+1) .audio,
+article:nth-child(1n+1) .quote,
+article:nth-child(1n+1) .link {
+  background: url(/cas/tb/_img/bg/b1.jpg) no-repeat;
+  background-size: cover;
+}
+
+article:nth-child(2n+1) .video,
+article:nth-child(2n+1) .text,
+article:nth-child(2n+1) .audio,
+article:nth-child(2n+1) .quote,
+article:nth-child(2n+1) .link {
+  background: url(/cas/tb/_img/bg/b2.jpg) no-repeat;
+  background-size: cover;
+}
+
+article:nth-child(3n+1) .video,
+article:nth-child(3n+1) .text,
+article:nth-child(3n+1) .audio,
+article:nth-child(3n+1) .quote,
+article:nth-child(3n+1) .link {
+  background: url(/cas/tb/_img/bg/b3.jpg) no-repeat;
+  background-size: cover;
+}
+
+article:nth-child(4n+1) .video,
+article:nth-child(4n+1) .text,
+article:nth-child(4n+1) .audio,
+article:nth-child(4n+1) .quote,
+article:nth-child(4n+1) .link {
+  background: url(/cas/tb/_img/bg/b4.jpg) no-repeat;
+  background-size: cover;
+}
+
+article:nth-child(5n+1) .video,
+article:nth-child(5n+1) .text,
+article:nth-child(5n+1) .audio,
+article:nth-child(5n+1) .quote,
+article:nth-child(5n+1) .link {
+  background: url(/cas/tb/_img/bg/b5.jpg) no-repeat;
+  background-size: cover;
+}
+
+article:nth-child(6n+1) .video,
+article:nth-child(6n+1) .text,
+article:nth-child(6n+1) .audio,
+article:nth-child(6n+1) .quote,
+article:nth-child(6n+1) .link {
+  background: url(/cas/tb/_img/bg/b6.jpg) no-repeat;
+  background-size: cover;
+  background-position-y: 20%;
+}
+
+.text .content img {
+  float: left;
+  margin-right: 10px;
+}
+
+.text .wrapper, .audio .wrapper, .quote .wrapper {
+  padding-bottom: 30px;
+}
+
+.text h2, .quote h2 {
+  display: block;
+  background: #030303;
+  color: #fff;
+  font-family: 'Impact', sans-serif;
+  text-transform: uppercase;
+  padding: 0 30px;
+  font-size: 45pt;
+  line-height: 70pt;
+}
+
+.audio .wrapper {
+  padding-top: 20px;
+}
+
+.audio iframe {
+  width: 100%;
+}
+
+.link h2 {
+  font-size: 80px;
+  color: #000;
+  font-family: Impact, sans-serif;
+}
+
+.link h2 a {
+  color: #000;
+}
+
+.text .content, .quote .content, .audio .wrapper{
+  padding: 0 30px 10px;
+  margin-bottom: 50px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 17pt;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxJSIgc3RvcC1jb2xvcj0iIzAzMDMwMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top,  rgba(3,3,3,1) 1%, rgba(0,0,0,0) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,rgba(3,3,3,1)), color-stop(100%,rgba(0,0,0,0)));
+  background: -webkit-linear-gradient(top,  rgba(3,3,3,1) 1%,rgba(0,0,0,0) 100%);
+  background: -o-linear-gradient(top,  rgba(3,3,3,1) 1%,rgba(0,0,0,0) 100%);
+  background: -ms-linear-gradient(top,  rgba(3,3,3,1) 1%,rgba(0,0,0,0) 100%);
+  background: linear-gradient(to bottom,  rgba(3,3,3,1) 1%,rgba(0,0,0,0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#030303', endColorstr='#00000000',GradientType=0 );
+}
+
+.vid {
+  width: 700px;
+  float: left;
+}
+
+.video .wrapper {
+  padding-top: 10px;
+}
+
+.video .caption {
+  float: left;
+  color: #fff;
+  padding: 0 10px;
+  font-size: 20px;
+  width: 330px;
+  background: #030303;
+  margin-top: 20px;
+}
+
+.footer {
+  text-align: center;
+  font: 80px 'Impact', sans-serif;
+}
+
+iframe#cinemagram .person {
+  display: none;
+}

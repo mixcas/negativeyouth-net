@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>Comentarios en: RITUALZ &#8211; 春</title>
+	<atom:link href="http://negativeyouth.net/ritualz-spring/feed/" rel="self" type="application/rss+xml" />
+	<link>http://negativeyouth.net/ritualz-spring/</link>
+	<description>NEGATIVE YOUTH</description>
+	<lastBuildDate>Wed, 03 Jul 2013 01:46:28 +0000</lastBuildDate>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.8</generator>
+	<item>
+		<title>Por: Zamara</title>
+		<link>http://negativeyouth.net/ritualz-spring/#comment-3813</link>
+		<dc:creator><![CDATA[Zamara]]></dc:creator>
+		<pubDate>Fri, 04 May 2012 20:03:40 +0000</pubDate>
+		<guid isPermaLink="false">http://negativeyouth.net/?p=5516#comment-3813</guid>
+		<description><![CDATA[Oh, Sālmarnir &lt;3 
+
+Epic Mix! Es como irte de viaje a tu subconsciente.]]></description>
+		<content:encoded><![CDATA[<p>Oh, Sālmarnir &lt;3 </p>
+<p>Epic Mix! Es como irte de viaje a tu subconsciente.</p>
+]]></content:encoded>
+	</item>
+</channel>
+</rss>

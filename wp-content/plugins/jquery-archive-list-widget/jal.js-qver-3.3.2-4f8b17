@@ -1,0 +1,22 @@
+function jquery_archive_list_animate(clicked_obj){
+                if(jQuery(clicked_obj).parent().children('ul').children('li').is(':hidden')){
+                    jQuery(clicked_obj).parent().children('ul').children('li').slideDown();
+                    jQuery(clicked_obj).parent().children('a').children('.jaw_symbol').html('▼');
+                }
+                else
+                {
+                    jQuery(clicked_obj).parent().children('a').children('.jaw_symbol').html('►');
+                    jQuery(clicked_obj).parent().children('ul').children('li').slideUp();
+                }
+                jQuery(clicked_obj).parent().toggleClass('expanded');
+            }
+
+            jQuery(document).ready(function() {
+                jQuery('li.jaw_years a.jaw_years').bind('click', function(){
+                    jquery_archive_list_animate(this);
+                            return false;
+                });
+             jQuery('li.jaw_months a.jaw_months').bind('click', function(){
+                    jquery_archive_list_animate(this);
+                                return false;
+                });});
