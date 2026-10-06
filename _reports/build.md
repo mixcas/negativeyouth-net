@@ -6,17 +6,17 @@ Measured 05 October 2026.
 
 | Metric | Value |
 |---|---:|
-| Files | **5,220** |
+| Files | **5,222** |
 | Directories | 3,768 |
-| Total size | **615.7 MB** |
-| HTML pages | 2,843 |
+| Total size | **615.8 MB** |
+| HTML pages | 2,844 |
 | Largest file | 3.66 MB |
 
 ## By type
 
 | Type | Files | Size |
 |---|---:|---:|
-| .html | 2,843 | 405.36 MB |
+| .html | 2,844 | 405.49 MB |
 | .jpg | 1,027 | 136.76 MB |
 | .xml | 849 | 0.80 MB |
 | .png | 334 | 40.34 MB |
@@ -53,11 +53,11 @@ Measured 05 October 2026.
 
 | Host | Limit | This build | Verdict |
 |---|---|---|---|
-| Cloudflare Pages | 25,000 files | 5,220 files, 616 MB | **fits comfortably** |
+| Cloudflare Pages | 25,000 files | 5,222 files, 616 MB | **fits comfortably** |
 | GitHub Pages | 1 GB repo, 100 MB/file | 616 MB, largest 3.7 MB | **fits comfortably** |
-| Bluehost shared | inode caps often 2,000-5,000 | 5,220 files (2.6x a 2,000 cap) | **borderline - measure first** |
+| Bluehost shared | inode caps often 2,000-5,000 | 5,222 files (2.6x a 2,000 cap) | **borderline - measure first** |
 
-At 5,220 files the build is over the file count that many shared
+At 5,222 files the build is over the file count that many shared
 hosting plans allow, and Bluehost's cap varies by plan. Disk space is a
 non-issue: the quota is measured in tens of gigabytes and this is
 616 MB.
@@ -69,7 +69,6 @@ decision, and it is the main reason the file count is where it is.
 ## Content
 
 - **960 posts** recovered, 3 permanently lost
-- Non-post assets: **73 more recovered** in a later fetch pass (46 thumbnails, 27 comment feeds); 4 resources remain unrecovered, two of them PHP endpoints
 - **949** posts carry a recovered date
 - Spanning **2010-10-18** to **2013-07-03**
 
