@@ -5,7 +5,10 @@ sourced entirely from web.archive.org, and re-host it at the recovered domain.
 
 **Target output:** pixel-faithful mirror of the original 2010–2013 "Sandbox" WordPress theme.
 
-**Status:** Phases 1-8 complete. Phase 9 (hosting artifacts and deploy) pending.
+**Status:** Phases 1-8 complete. Published to GitHub Pages
+(`mixcas/negativeyouth-net`, `main` = the static tree, `source` = this tooling);
+custom-domain cutover pending. Local publish checkout at
+`../negativeyouth-net-site/`.
 
 | Phase | Report | Data |
 |---|---|---|
