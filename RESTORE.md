@@ -7,7 +7,11 @@ sourced entirely from web.archive.org, and re-host it at the recovered domain.
 
 **Status:** Phases 1-8 complete. Live at https://negativeyouth.net/ via
 GitHub Pages (`mixcas/negativeyouth-net`: `main` = the static tree, `source` =
-this tooling). Local publish checkout at `../negativeyouth-net-site/`.
+this tooling). Local publish checkout at `../negativeyouth-net-site/`. Sync with
+`rsync -a --delete --exclude /.git --exclude /.gitignore --exclude /CNAME
+site/ ../negativeyouth-net-site/` — the `CNAME` (custom domain, created by
+GitHub) and `.gitignore` live only in the publish repo and must never be
+deleted by the sync.
 
 | Phase | Report | Data |
 |---|---|---|
