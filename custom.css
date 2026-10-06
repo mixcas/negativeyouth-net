@@ -1,0 +1,56 @@
+/* ------------------------------------------------------------------
+ * negativeyouth.net — site-owner custom stylesheet.
+ *
+ * This is YOUR file. Edit it by hand. It is loaded AFTER the theme's own
+ * stylesheets on every page, so wherever two rules have equal specificity,
+ * yours wins. The original theme files are never touched.
+ *
+ * Workflow:
+ *   1. Edit this file.
+ *   2. Preview instantly, no rebuild needed:
+ *        cp custom.css site/custom.css
+ *      then reload http://127.0.0.1:8123/
+ *   3. When it looks right, commit this file. The next full rebuild
+ *      (tools/06_rewrite.py) copies it into site/ automatically, and the
+ *      publish sync carries it to GitHub Pages.
+ *
+ * Do NOT edit site/custom.css as the permanent copy: it is build output and
+ * gets overwritten on every rebuild. This file is the source of truth.
+ * ------------------------------------------------------------------ */
+
+/* Everything below is commented out, so the site renders exactly as archived
+ * until you uncomment something. A few useful starting points:
+ */
+
+/* Page background. The theme paints it black; try a deep red:
+body {
+	background: #1a0505;
+}
+ */
+
+/* Content column width. The theme fixes it at 704px with 10px borders:
+div#content {
+	width: 704px;
+}
+ */
+
+/* Post titles. Note the `a`: titles are links, and the anchor carries its own
+ * colour, so a bare `.entry-title` rule loses to it:
+.entry-title a {
+	color: #ff0179;
+}
+ */
+
+/* Links on hover are already pink (#ff5060 italic). Plain links:
+a {
+	color: #fff;
+}
+ */
+
+/* The grey provenance footer at the bottom of every page. Its own <style>
+ * block comes after this file in <head>, so a bare #ny-archive-provenance
+ * rule loses the tie — give yours more weight, e.g.:
+#ny-archive-provenance {
+	display: none;
+}
+ */
